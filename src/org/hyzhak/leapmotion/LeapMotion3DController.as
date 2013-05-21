@@ -9,11 +9,11 @@ package org.hyzhak.leapmotion {
 
     import flash.display.Sprite;
 
-    public class LeapMotion3DCamera extends Sprite {
+    public class LeapMotion3DController extends Sprite {
 
         private var _controller:Controller;
 
-        public function LeapMotion3DCamera() {
+        public function LeapMotion3DController() {
             super();
             init();
         }
