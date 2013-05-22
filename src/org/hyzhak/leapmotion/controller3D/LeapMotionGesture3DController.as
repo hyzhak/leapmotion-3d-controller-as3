@@ -10,17 +10,20 @@ package org.hyzhak.leapmotion.controller3D {
     import flash.display.Sprite;
     import flash.events.Event;
 
+    import org.hyzhak.leapmotion.controller3D.gestures.CircleGestureController;
+    import org.hyzhak.leapmotion.controller3D.gestures.SwipeGestureController;
+
     public class LeapMotionGesture3DController {
         private var _object:Object3D;
         private var _controller:Controller;
 
         private var _gestureControllers:Object = {};
-        private var _circleGestureController:CircleGestureController;
 
         public function LeapMotionGesture3DController(eventSource:InteractiveObject, object:Object3D, controller: Controller, debugDrawView:Sprite = null) {
             _object = object;
 
-            _gestureControllers[Gesture.TYPE_CIRCLE] = _circleGestureController = new CircleGestureController();
+            _gestureControllers[Gesture.TYPE_CIRCLE] = new CircleGestureController();
+            _gestureControllers[Gesture.TYPE_SWIPE] = new SwipeGestureController();
 
             _controller = controller;
             _controller.addEventListener( LeapEvent.LEAPMOTION_FRAME, onFrame );
@@ -37,7 +40,10 @@ package org.hyzhak.leapmotion.controller3D {
             var frame:Frame = event.frame;
             var gestures:Vector.<Gesture> = frame.gestures();
             for each(var gesture:Gesture in gestures) {
-                _gestureControllers[gesture.type].updateWith(gesture);
+                var controller:IGestureController = _gestureControllers[gesture.type];
+                if (controller) {
+                    controller.updateWith(gesture);
+                }
             }
         }
     }
