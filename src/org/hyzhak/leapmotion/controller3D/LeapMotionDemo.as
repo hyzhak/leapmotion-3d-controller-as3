@@ -1,7 +1,10 @@
 package org.hyzhak.leapmotion.controller3D {
+    import alternativa.engine3d.core.Object3D;
+
     import com.leapmotion.leap.Controller;
     import com.leapmotion.leap.Finger;
     import com.leapmotion.leap.Frame;
+    import com.leapmotion.leap.Gesture;
     import com.leapmotion.leap.events.LeapEvent;
 
     import flash.display.Bitmap;
@@ -12,10 +15,11 @@ package org.hyzhak.leapmotion.controller3D {
 
     import org.hyzhak.leapmotion.controller3D.skybox.space.SpaceSkyBox;
 
-    public class LeapMotion3DControllerDemo extends Sprite {
+    public class LeapMotionDemo extends Sprite {
 
         private var _scene:Scene3D;
         private var _controller:Controller;
+        private var _gesture3DController:LeapMotionGesture3DController;
 
         //source : http://opengameart.org/content/syntmetal04
         [Embed(source="/assets/synthetic_metal_04_diffuse.png")]
@@ -27,17 +31,12 @@ package org.hyzhak.leapmotion.controller3D {
         [Embed(source="/assets/synthetic_metal_04_specular.png")]
         private static const SPECULAR_MAP:Class;
 
-        public function LeapMotion3DControllerDemo() {
+        public function LeapMotionDemo() {
             stage.align = StageAlign.TOP_LEFT;
             stage.scaleMode = StageScaleMode.NO_SCALE;
 
             buildLeapMotionController();
             build3DScene();
-            buildFingersView();
-        }
-
-        private function buildFingersView():void {
-
         }
 
         private function build3DScene():void {
@@ -49,8 +48,12 @@ package org.hyzhak.leapmotion.controller3D {
             scene.specularMap = (new SPECULAR_MAP() as Bitmap).bitmapData;
             scene.specularPower = 0.5
 
-            _scene.demoScene = scene;
+            var object:Object3D = scene.build();
+
+            _gesture3DController = new LeapMotionGesture3DController(stage, object, _controller);
+
             _scene.initInstance();
+            _scene.add3DObject(scene);
             _scene.add3DObject(new SpaceSkyBox());
 
             validateSceneSize();
@@ -69,11 +72,12 @@ package org.hyzhak.leapmotion.controller3D {
 
         private function buildLeapMotionController():void {
             _controller = new Controller();
+
             _controller.addEventListener( LeapEvent.LEAPMOTION_INIT, onInit );
             _controller.addEventListener( LeapEvent.LEAPMOTION_CONNECTED, onConnect );
             _controller.addEventListener( LeapEvent.LEAPMOTION_DISCONNECTED, onDisconnect );
             _controller.addEventListener( LeapEvent.LEAPMOTION_EXIT, onExit );
-            _controller.addEventListener( LeapEvent.LEAPMOTION_FRAME, onFrame );
+//            _controller.addEventListener( LeapEvent.LEAPMOTION_FRAME, onFrame );
         }
 
         private function onInit(event:LeapEvent):void {
@@ -82,6 +86,9 @@ package org.hyzhak.leapmotion.controller3D {
 
         private function onConnect(event:LeapEvent):void {
             trace("onConnect");
+            _controller.enableGesture(Gesture.TYPE_CIRCLE);
+            _controller.enableGesture(Gesture.TYPE_SWIPE );
+            _controller.enableGesture(Gesture.TYPE_SCREEN_TAP);
         }
 
         private function onDisconnect(event:LeapEvent):void {

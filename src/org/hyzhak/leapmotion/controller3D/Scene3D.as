@@ -106,8 +106,8 @@ package org.hyzhak.leapmotion.controller3D {
 
         private function buildScene() : void {
             // var tr:TextureResource = new TextureResource();
-            demoScene.forStage3D(_stage3D).build();
-            _rootContainer.addChild(demoScene);
+//            demoScene.forStage3D(_stage3D).build();
+//            _rootContainer.addChild(demoScene);
         }
 
         private function initCameraView() : void {

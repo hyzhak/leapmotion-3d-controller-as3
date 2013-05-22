@@ -27,7 +27,7 @@ package org.hyzhak.leapmotion.controller3D {
 			return this;
 		}
 
-		public function build() : void {
+		public function build() : Object3D {
 			buildDefaultWhiteTexture();
 			buildDefaultNormalMap();
 
@@ -40,6 +40,8 @@ package org.hyzhak.leapmotion.controller3D {
             updateDiffuse();
             updateNormal();
             updateSpecular();
+
+            return box;
 		}
 
         // --------------------------------------------------------------------------
@@ -52,14 +54,14 @@ package org.hyzhak.leapmotion.controller3D {
 			var bitmap : BitmapData = new BitmapData(1, 1);
 			bitmap.setPixel(0, 0, 0xFFFFFF);
 			_defaultWhiteTexture = new BitmapTextureResource(bitmap, true);
-			_defaultWhiteTexture.upload(_stage3D.context3D);
+//			_defaultWhiteTexture.upload(_stage3D.context3D);
 		}
 
 		private function buildDefaultNormalMap() : void {
 			var bitmap : BitmapData = new BitmapData(1, 1);
 			bitmap.setPixel(0, 0, 0x7F7FFF);
 			_defaultNormalMap = new BitmapTextureResource(bitmap, true);
-			_defaultNormalMap.upload(_stage3D.context3D);
+//			_defaultNormalMap.upload(_stage3D.context3D);
 		}
 
 		private function updateDiffuse() : void {
@@ -85,7 +87,7 @@ package org.hyzhak.leapmotion.controller3D {
                     throw new Error(mapName + " must has width and height power of 2. Not " + bitmap.width + "x" + bitmap.height);
                 }
                 resource = new BitmapTextureResource(bitmap, true);
-                resource.upload(_stage3D.context3D);
+//                resource.upload(_stage3D.context3D);
             }
 
             if (_material != null && _material[mapName] != resource) {
