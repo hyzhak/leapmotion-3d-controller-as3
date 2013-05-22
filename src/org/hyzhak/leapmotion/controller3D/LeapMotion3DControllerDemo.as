@@ -1,26 +1,73 @@
-package org.hyzhak.leapmotion {
+package org.hyzhak.leapmotion.controller3D {
     import com.leapmotion.leap.Controller;
     import com.leapmotion.leap.Finger;
-    import com.leapmotion.leap.Finger;
     import com.leapmotion.leap.Frame;
-    import com.leapmotion.leap.Hand;
-    import com.leapmotion.leap.Screen;
-    import com.leapmotion.leap.Vector3;
     import com.leapmotion.leap.events.LeapEvent;
-    import com.leapmotion.leap.util.LeapUtil;
 
+    import flash.display.Bitmap;
     import flash.display.Sprite;
+    import flash.display.StageAlign;
+    import flash.display.StageScaleMode;
+    import flash.events.Event;
 
-    public class LeapMotion3DController extends Sprite {
+    import org.hyzhak.leapmotion.controller3D.skybox.space.SpaceSkyBox;
 
+    public class LeapMotion3DControllerDemo extends Sprite {
+
+        private var _scene:Scene3D;
         private var _controller:Controller;
 
-        public function LeapMotion3DController() {
-            super();
-            init();
+        //source : http://opengameart.org/content/syntmetal04
+        [Embed(source="/assets/synthetic_metal_04_diffuse.png")]
+        private static const DIFFUSE_MAP:Class;
+
+        [Embed(source="/assets/synthetic_metal_04_normal.png")]
+        private static const NORMAL_MAP:Class;
+
+        [Embed(source="/assets/synthetic_metal_04_specular.png")]
+        private static const SPECULAR_MAP:Class;
+
+        public function LeapMotion3DControllerDemo() {
+            stage.align = StageAlign.TOP_LEFT;
+            stage.scaleMode = StageScaleMode.NO_SCALE;
+
+            buildLeapMotionController();
+            build3DScene();
+            buildFingersView();
         }
 
-        private function init():void {
+        private function buildFingersView():void {
+
+        }
+
+        private function build3DScene():void {
+            _scene = new Scene3D();
+
+            var scene:Document3DScene = new Document3DScene();
+            scene.diffuseMap = (new DIFFUSE_MAP() as Bitmap).bitmapData;
+            scene.normalMap = (new NORMAL_MAP() as Bitmap).bitmapData;
+            scene.specularMap = (new SPECULAR_MAP() as Bitmap).bitmapData;
+            scene.specularPower = 0.5
+
+            _scene.demoScene = scene;
+            _scene.initInstance();
+            _scene.add3DObject(new SpaceSkyBox());
+
+            validateSceneSize();
+            addChild(_scene);
+
+            stage.addEventListener(Event.RESIZE, onStageResize);
+        }
+
+        private function onStageResize(event:Event):void {
+            validateSceneSize();
+        }
+
+        private function validateSceneSize():void {
+            _scene.resize(stage.stageWidth, stage.stageHeight);
+        }
+
+        private function buildLeapMotionController():void {
             _controller = new Controller();
             _controller.addEventListener( LeapEvent.LEAPMOTION_INIT, onInit );
             _controller.addEventListener( LeapEvent.LEAPMOTION_CONNECTED, onConnect );
