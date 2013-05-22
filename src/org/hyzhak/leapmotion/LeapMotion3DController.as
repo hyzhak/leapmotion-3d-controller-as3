@@ -1,8 +1,10 @@
 package org.hyzhak.leapmotion {
     import com.leapmotion.leap.Controller;
     import com.leapmotion.leap.Finger;
+    import com.leapmotion.leap.Finger;
     import com.leapmotion.leap.Frame;
     import com.leapmotion.leap.Hand;
+    import com.leapmotion.leap.Screen;
     import com.leapmotion.leap.Vector3;
     import com.leapmotion.leap.events.LeapEvent;
     import com.leapmotion.leap.util.LeapUtil;
@@ -48,6 +50,16 @@ package org.hyzhak.leapmotion {
             var frame:Frame = event.frame;
             trace( "Frame id: " + frame.id + ", timestamp: " + frame.timestamp + ", hands: " + frame.hands.length + ", fingers: " + frame.fingers.length + ", tools: " + frame.tools.length );
 
+            var fingers:Vector.<Finger> = frame.fingers;
+
+
+            for each(var finger:Finger in fingers.length) {
+                if (finger.isValid()) {
+                    finger.tipPosition;
+                }
+            }
+
+            /*
             if ( frame.hands.length > 0 )
             {
                 // Get the first hand
@@ -64,6 +76,10 @@ package org.hyzhak.leapmotion {
 
                     avgPos = avgPos.divide( fingers.length );
                     trace( "Hand has " + fingers.length + " fingers, average finger tip position: " + avgPos );
+
+                    finger = fingers[0];
+                    var screen:Screen = _controller.closestScreenHitPointable(finger);
+                    var pos:Vector3 = screen.intersectPointable(finger, false);
                 }
 
                 // Get the hand's sphere radius and palm position
@@ -76,6 +92,7 @@ package org.hyzhak.leapmotion {
                 // Calculate the hand's pitch, roll, and yaw angles
                 trace( "Hand pitch: " + LeapUtil.toDegrees( direction.pitch ) + " degrees, " + "roll: " + LeapUtil.toDegrees( normal.roll ) + " degrees, " + "yaw: " + LeapUtil.toDegrees( direction.yaw ) + " degrees\n" );
             }
+            */
         }
     }
 }
