@@ -8,28 +8,30 @@ package org.hyzhak.leapmotion.controller3D.gestures {
     import org.hyzhak.leapmotion.controller3D.IGestureController;
 
     public class SwipeGestureController implements IGestureController {
-        public var rotationMultiplier:Number = 0.0001;
+        public var rotationMultiplier:Number = 0.0003;
+        public var rotationAcceleration:Number = 0.1;
+        public var rotationDegradation:Number = 0.9;
 
-        private var count:int = 0;
-        private var speed:int = 0;
+        private var _speed:int = 0;
+        private var _swipeSpeed:int = 0;
 
-        private var direction:Vector3;
+        private var _direction:Vector3;
 
         private var _applying:Boolean;
 
         public function applyTo(object:Object3D):void {
             if (_applying) {
-                trace("count: ", count);
-                trace("speed: ", speed);
-                trace("direction", direction);
-                count = 0;
-                if (direction.x > 0) {
-                    object.rotationZ+= rotationMultiplier * speed;
+                if (_direction.x > 0) {
+                    _speed += rotationAcceleration*(_swipeSpeed - _speed)
                 } else {
-                    object.rotationZ-= rotationMultiplier * speed;
+                    _speed += rotationAcceleration*(-_swipeSpeed - _speed)
                 }
-                speed = 0;
+                _swipeSpeed = 0;
+            } else {
+                _speed*=rotationDegradation;
             }
+
+            object.rotationZ += rotationMultiplier * _speed;
         }
 
         public function updateWith(gesture:Gesture):void {
@@ -41,10 +43,10 @@ package org.hyzhak.leapmotion.controller3D.gestures {
                     _applying = false;
                     break;
             }
-            count++;
+
             var swipe:SwipeGesture = gesture as SwipeGesture;
-            speed += swipe.speed;
-            direction = swipe.direction;
+            _swipeSpeed += swipe.speed;
+            _direction = swipe.direction;
         }
     }
 }

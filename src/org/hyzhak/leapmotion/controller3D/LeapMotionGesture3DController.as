@@ -12,6 +12,7 @@ package org.hyzhak.leapmotion.controller3D {
 
     import org.hyzhak.leapmotion.controller3D.gestures.CircleGestureController;
     import org.hyzhak.leapmotion.controller3D.gestures.SwipeGestureController;
+    import org.hyzhak.leapmotion.controller3D.gestures.TraceGestureController;
 
     public class LeapMotionGesture3DController {
         private var _object:Object3D;
@@ -22,8 +23,14 @@ package org.hyzhak.leapmotion.controller3D {
         public function LeapMotionGesture3DController(eventSource:InteractiveObject, object:Object3D, controller: Controller, debugDrawView:Sprite = null) {
             _object = object;
 
-            _gestureControllers[Gesture.TYPE_CIRCLE] = new CircleGestureController();
-            _gestureControllers[Gesture.TYPE_SWIPE] = new SwipeGestureController();
+            _gestureControllers[Gesture.TYPE_CIRCLE] = [
+                new CircleGestureController()
+            ];
+
+            _gestureControllers[Gesture.TYPE_SWIPE] = [
+                new SwipeGestureController(),
+                new TraceGestureController("swipe")
+            ];
 
             _controller = controller;
             _controller.addEventListener( LeapEvent.LEAPMOTION_FRAME, onFrame );
@@ -31,8 +38,10 @@ package org.hyzhak.leapmotion.controller3D {
         }
 
         private function onEnterFrame(event:Event):void {
-            for each(var controller:IGestureController in _gestureControllers) {
-                controller.applyTo(_object);
+            for each(var controllers:Array in _gestureControllers) {
+                for each(var controller:IGestureController in controllers) {
+                    controller.applyTo(_object);
+                }
             }
         }
 
@@ -40,8 +49,8 @@ package org.hyzhak.leapmotion.controller3D {
             var frame:Frame = event.frame;
             var gestures:Vector.<Gesture> = frame.gestures();
             for each(var gesture:Gesture in gestures) {
-                var controller:IGestureController = _gestureControllers[gesture.type];
-                if (controller) {
+                var controllers:Array = _gestureControllers[gesture.type];
+                for each(var controller:IGestureController in controllers) {
                     controller.updateWith(gesture);
                 }
             }
