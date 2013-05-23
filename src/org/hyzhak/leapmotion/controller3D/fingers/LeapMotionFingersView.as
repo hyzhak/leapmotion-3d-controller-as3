@@ -73,8 +73,9 @@ package org.hyzhak.leapmotion.controller3D.fingers {
                 view.useless = false;
                 var tipPosition:Vector3 = pointable.tipPosition;
                 view.x = scale * tipPosition.x;
-                view.y = scale * tipPosition.y;
-                view.z = scale * tipPosition.z;
+                view.y = -scale * tipPosition.z;
+                view.z = scale * tipPosition.y;
+
                 view.scaleZ = pointable.length;
                 view.rotationX = pointable.direction.pitch;
 //                view.rotationY = finger.direction.yaw;
