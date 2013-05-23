@@ -1,14 +1,17 @@
-package org.hyzhak.leapmotion.controller3D {
+package org.hyzhak.leapmotion.controller3D.scene {
+    import org.hyzhak.leapmotion.controller3D.*;
     import alternativa.engine3d.core.Object3D;
     import alternativa.engine3d.materials.StandardMaterial;
     import alternativa.engine3d.primitives.Box;
     import alternativa.engine3d.resources.BitmapTextureResource;
     import alternativa.engine3d.resources.TextureResource;
 
+    import flash.display.Bitmap;
+
     import flash.display.BitmapData;
     import flash.display.Stage3D;
 
-    public class Document3DScene extends Object3D {
+    public class DemoScene3D extends Object3D {
 		private var _stage3D : Stage3D;
 
 		private var _specularPower : Number = 1.0;
@@ -18,11 +21,21 @@ package org.hyzhak.leapmotion.controller3D {
 		private var _defaultWhiteTexture : TextureResource;
 		private var _defaultNormalMap:BitmapTextureResource;
 
-        public var diffuseMap:BitmapData;
-        public var normalMap:BitmapData;
-        public var specularMap:BitmapData;
+        //source : http://opengameart.org/content/syntmetal04
+        [Embed(source="synthetic_metal_04_diffuse.png")]
+        private static const DIFFUSE_MAP:Class;
 
-		public function forStage3D(value : Stage3D) : Document3DScene {
+        [Embed(source="synthetic_metal_04_normal.png")]
+        private static const NORMAL_MAP:Class;
+
+        [Embed(source="synthetic_metal_04_specular.png")]
+        private static const SPECULAR_MAP:Class;
+
+        public var diffuseMap:BitmapData = (new DIFFUSE_MAP() as Bitmap).bitmapData;
+        public var normalMap:BitmapData = (new NORMAL_MAP() as Bitmap).bitmapData;
+        public var specularMap:BitmapData = (new SPECULAR_MAP() as Bitmap).bitmapData;
+
+		public function forStage3D(value : Stage3D) : DemoScene3D {
 			_stage3D = value;
 			return this;
 		}

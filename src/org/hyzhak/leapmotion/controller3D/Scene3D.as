@@ -11,6 +11,8 @@ package org.hyzhak.leapmotion.controller3D {
     import flash.display3D.Context3D;
     import flash.events.Event;
 
+    import org.hyzhak.leapmotion.controller3D.scene.DemoScene3D;
+
     public class Scene3D extends Sprite {
         private var _rootContainer : Object3D;
 
@@ -22,7 +24,7 @@ package org.hyzhak.leapmotion.controller3D {
 
         private var _cameraContainer : MouseCameraController;
 
-        public var demoScene : Document3DScene;
+        public var demoScene : DemoScene3D;
 
         public function initInstance() : void {
             _rootContainer = new Object3D();
