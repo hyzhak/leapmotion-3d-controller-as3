@@ -7,6 +7,7 @@ package org.hyzhak.leapmotion.controller3D.fingers {
     import com.leapmotion.leap.Pointable;
     import com.leapmotion.leap.Vector3;
     import com.leapmotion.leap.events.LeapEvent;
+    import com.leapmotion.leap.util.LeapUtil;
 
     import flash.display.Stage3D;
 
@@ -58,7 +59,8 @@ package org.hyzhak.leapmotion.controller3D.fingers {
         }
 
         private function onFrame(event:LeapEvent):void {
-            markFingersAsUseless();
+            markFingersAsUseless(_fingers);
+            markFingersAsUseless(_tools);
 
             var fingers:Vector.<Pointable> = event.frame.pointables;
             for each(var pointable:Pointable in fingers) {
@@ -76,31 +78,34 @@ package org.hyzhak.leapmotion.controller3D.fingers {
                 view.y = -scale * tipPosition.z;
                 view.z = scale * tipPosition.y;
 
-                view.scaleZ = pointable.length;
-                view.rotationX = pointable.direction.pitch;
-//                view.rotationY = finger.direction.yaw;
+//                view.scaleY = pointable.length;
+                view.rotationX = Math.PI / 2 + pointable.direction.pitch;
+                view.rotationZ = -pointable.direction.yaw;//Math.PI / 2;
+                //view.rotationZ = Math.PI / 2;
+                //view.rotationZ = pointable.direction.yaw;
 //                view.rotationZ = finger.direction.roll;
             }
 
-            sweepUnusedFingers();
+            sweepUnusedFingers(_fingers, _fingersPool);
+            sweepUnusedFingers(_tools, _toolsPool);
         }
 
-        private function sweepUnusedFingers():void {
-            for(var i:int = 0, count:int = _fingers.length; i < count; i++) {
-                var finger:AbstractFingerView = _fingers[i];
-                if (finger && finger.useless) {
-                    _fingersPool.returnObject(finger);
-                    trace("remove child", i);
-                    removeChild(finger);
-                    _fingers[i] = null;
+        private function markFingersAsUseless(collection:Vector.<AbstractFingerView>):void {
+            for each(var finger:AbstractFingerView in collection) {
+                if (finger) {
+                    finger.useless = true;
                 }
             }
         }
 
-        private function markFingersAsUseless():void {
-            for each(var finger:AbstractFingerView in _fingers) {
-                if (finger) {
-                    finger.useless = true;
+        private function sweepUnusedFingers(collection:Vector.<AbstractFingerView>, pool:PointablesPool):void {
+            for(var i:int = 0, count:int = collection.length; i < count; i++) {
+                var finger:AbstractFingerView = collection[i];
+                if (finger && finger.useless) {
+                    pool.returnObject(finger);
+                    trace("remove child", i);
+                    removeChild(finger);
+                    collection[i] = null;
                 }
             }
         }
