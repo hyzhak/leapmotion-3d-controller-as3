@@ -12,7 +12,7 @@ package org.hyzhak.leapmotion.controller3D.intersect {
 
         public function getChildAt(vector:Vector3):IIntersectable {
             for each(var child:IIntersectable in _targets) {
-                if (child.isIntersect(vector.x, vector.y, vector.z)) {
+                if (child.isIntersect(vector.x, -vector.z, vector.y)) {
                     return child;
                 }
             }

@@ -48,6 +48,7 @@ package org.hyzhak.leapmotion.controller3D.scene {
 
 			var box : Box = new Box();
 			box.setMaterialToAllSurfaces(_material);
+            box.z = 50;
 			addChild(box);
 
             updateDiffuse();

@@ -52,7 +52,6 @@ package org.hyzhak.leapmotion.controller3D.intersect {
                     if (intersection) {
                         intersection.intersectable.hovered = false;
                         intersection.intersectable.selected = false;
-                        intersection.intersectable = null;
                         _childUnderFinger[i] = null;
                         _poolPointableIntersection.returnObject(intersection);
                     }
@@ -61,6 +60,9 @@ package org.hyzhak.leapmotion.controller3D.intersect {
                         intersection = _poolPointableIntersection.borrowObject();
                         intersection.intersectable = intersectable;
                         intersection.duration = 0;
+                        if (_childUnderFinger.length <= i) {
+                            _childUnderFinger.length = i + 1;
+                        }
                         _childUnderFinger[i] = intersection;
                     }
                 }
