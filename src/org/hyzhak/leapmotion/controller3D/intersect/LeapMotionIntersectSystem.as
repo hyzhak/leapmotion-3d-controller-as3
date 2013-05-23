@@ -15,7 +15,7 @@ package org.hyzhak.leapmotion.controller3D.intersect {
         private var _poolPointableIntersection:PoolOfObjects = new PoolOfObjects(PointableIntersection);
         private var _controller:Controller;
         private var _childUnderFinger:Vector.<PointableIntersection> = new <PointableIntersection>[];
-        private var _previousTime:int;
+        private var _previousTime:Number;
 
         public function LeapMotionIntersectSystem(controller:Controller) {
             _controller = controller;
@@ -23,10 +23,11 @@ package org.hyzhak.leapmotion.controller3D.intersect {
         }
 
         private function onFrame(event:LeapEvent):void {
-            var currentTime:int = event.frame.timestamp
-            var deltaTime:int;
+            var currentTime:Number = event.frame.timestamp;
+            var deltaTime:Number;
             if (_previousTime > 0) {
-                deltaTime = currentTime - _previousTime;
+                //The timestamp in microseconds.
+                deltaTime = 0.001 * (currentTime - _previousTime);
             }
             _previousTime = currentTime;
             var pointables:Vector.<Pointable> = event.frame.pointables;
