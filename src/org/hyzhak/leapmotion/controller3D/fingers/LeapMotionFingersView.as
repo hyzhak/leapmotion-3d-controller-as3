@@ -58,7 +58,7 @@ package org.hyzhak.leapmotion.controller3D.fingers {
         private function disposeUnusedFingers():void {
             for(var i:int = 0, count:int = _fingers.length; i < count; i++) {
                 var finger:AbstractFingerView = _fingers[i];
-                if (!finger.used) {
+                if (finger && !finger.used) {
                     fingersPool.returnObject(finger);
                     removeChild(finger);
                     _fingers[i] = null;
@@ -68,7 +68,9 @@ package org.hyzhak.leapmotion.controller3D.fingers {
 
         private function clearMarkOfUsage():void {
             for each(var finger:AbstractFingerView in _fingers) {
-                finger.used = false;
+                if (finger) {
+                    finger.used = false;
+                }
             }
         }
 
@@ -83,6 +85,11 @@ package org.hyzhak.leapmotion.controller3D.fingers {
 
             fingerView = fingersPool.borrowObject();
             addChild(fingerView);
+            if (_fingers.length <= id) {
+                _fingers.length = id + 1;
+            }
+
+            _fingers[id] = fingerView;
             return fingerView;
         }
     }
