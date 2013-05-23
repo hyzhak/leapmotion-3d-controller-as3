@@ -35,6 +35,10 @@ package org.hyzhak.leapmotion.controller3D {
             }
         }
 
+        public function get stage3D():Stage3D {
+            return _stage3D;
+        }
+
         public function add3DObject(obj:Object3D):void {
             _rootContainer.addChild(obj);
         }

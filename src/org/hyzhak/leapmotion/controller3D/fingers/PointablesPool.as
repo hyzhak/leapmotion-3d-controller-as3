@@ -1,11 +1,17 @@
 package org.hyzhak.leapmotion.controller3D.fingers {
-    public class FingersPool {
+    import alternativa.engine3d.core.Resource;
+
+    import flash.display.Stage3D;
+
+    public class PointablesPool {
+
+        public var stage3D:Stage3D;
 
         private var _pool:Vector.<AbstractFingerView> = new <AbstractFingerView>[];
 
         private var FingerClass:Class;
 
-        public function FingersPool(FingerClass:Class) {
+        public function PointablesPool(FingerClass:Class) {
             this.FingerClass = FingerClass;
         }
 
@@ -15,7 +21,13 @@ package org.hyzhak.leapmotion.controller3D.fingers {
                 return instance;
             }
 
-            return new this.FingerClass();
+            instance = new this.FingerClass();
+
+            for each (var boxResource:Resource in instance.getResources(true)) {
+                boxResource.upload(stage3D.context3D);
+            }
+
+            return instance;
         }
 
         public function returnObject(finger:AbstractFingerView):void {

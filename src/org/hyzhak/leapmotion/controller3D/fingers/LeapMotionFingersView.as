@@ -4,8 +4,15 @@ package org.hyzhak.leapmotion.controller3D.fingers {
 
     import com.leapmotion.leap.Controller;
     import com.leapmotion.leap.Finger;
+    import com.leapmotion.leap.Pointable;
     import com.leapmotion.leap.Vector3;
     import com.leapmotion.leap.events.LeapEvent;
+
+    import flash.display.Stage3D;
+
+    import flash.utils.setTimeout;
+
+    import org.hyzhak.leapmotion.controller3D.LeapMotionDemo;
 
     import org.hyzhak.leapmotion.controller3D.fingers.AbstractFingerView;
 
@@ -14,9 +21,11 @@ package org.hyzhak.leapmotion.controller3D.fingers {
 
         private var _controller:Controller;
 
-        public var fingersPool:FingersPool = new FingersPool(ArrowFingerView);
+        private var _fingersPool:PointablesPool = new PointablesPool(ArrowFingerView);
+        private var _toolsPool:PointablesPool = new PointablesPool(BoxFingerView);
 
         private var _fingers:Vector.<AbstractFingerView> = new <AbstractFingerView>[];
+        private var _tools:Vector.<AbstractFingerView> = new <AbstractFingerView>[];
 
         public function LeapMotionFingersView(controller:Controller) {
             super();
@@ -27,69 +36,98 @@ package org.hyzhak.leapmotion.controller3D.fingers {
             addEventListener(Event3D.REMOVED, onRemoved);
         }
 
+        public function withStage3D(value:Stage3D):LeapMotionFingersView {
+            _fingersPool.stage3D = value;
+            _toolsPool.stage3D = value;
+            return this;
+        }
+
         private function onAdded(event:Event3D):void {
+            if (event.target != this) {
+                return;
+            }
             _controller.addEventListener(LeapEvent.LEAPMOTION_FRAME, onFrame);
         }
 
         private function onRemoved(event:Event3D):void {
+            if (event.target != this) {
+                return;
+            }
+
             _controller.removeEventListener(LeapEvent.LEAPMOTION_FRAME, onFrame);
         }
 
         private function onFrame(event:LeapEvent):void {
-            clearMarkOfUsage();
+            markFingersAsUseless();
 
-            var fingers:Vector.<Finger> = event.frame.fingers;
-            for each(var finger:Finger in fingers) {
-                var view:AbstractFingerView = getFingerViewById(finger.id);
-                view.used = true;
-                var tipPosition:Vector3 = finger.tipPosition;
+            var fingers:Vector.<Pointable> = event.frame.pointables;
+            for each(var pointable:Pointable in fingers) {
+                var view:AbstractFingerView;
+                if (pointable.isFinger) {
+                    view = getFingerViewById(pointable.id);
+                } else if (pointable.isTool){
+                    view = getToolViewById(pointable.id);
+                } else {
+                    throw new Error("Undefined pointable! Need to implement view for it.");
+                }
+                view.useless = false;
+                var tipPosition:Vector3 = pointable.tipPosition;
                 view.x = scale * tipPosition.x;
                 view.y = scale * tipPosition.y;
                 view.z = scale * tipPosition.z;
-                //view.scaleX = finger.length;
-//                view.rotationX = finger.direction.pitch;
+                view.scaleZ = pointable.length;
+                view.rotationX = pointable.direction.pitch;
 //                view.rotationY = finger.direction.yaw;
 //                view.rotationZ = finger.direction.roll;
             }
 
-            disposeUnusedFingers();
+            sweepUnusedFingers();
         }
 
-        private function disposeUnusedFingers():void {
+        private function sweepUnusedFingers():void {
             for(var i:int = 0, count:int = _fingers.length; i < count; i++) {
                 var finger:AbstractFingerView = _fingers[i];
-                if (finger && !finger.used) {
-                    fingersPool.returnObject(finger);
+                if (finger && finger.useless) {
+                    _fingersPool.returnObject(finger);
+                    trace("remove child", i);
                     removeChild(finger);
                     _fingers[i] = null;
                 }
             }
         }
 
-        private function clearMarkOfUsage():void {
+        private function markFingersAsUseless():void {
             for each(var finger:AbstractFingerView in _fingers) {
                 if (finger) {
-                    finger.used = false;
+                    finger.useless = true;
                 }
             }
         }
 
         private function getFingerViewById(id:int):AbstractFingerView {
+            return getPointableById(_fingersPool, _fingers, id);
+        }
+
+        private function getToolViewById(id:int):AbstractFingerView {
+            return getPointableById(_toolsPool, _tools, id);
+        }
+
+        private function getPointableById(pool:PointablesPool, fingersCollection:Vector.<AbstractFingerView>, id:int):AbstractFingerView {
             var fingerView:AbstractFingerView;
-            if (id < _fingers.length) {
-                fingerView = _fingers[id];
+            if (id < fingersCollection.length) {
+                fingerView = fingersCollection[id];
             }
             if (fingerView) {
                 return fingerView;
             }
 
-            fingerView = fingersPool.borrowObject();
+            fingerView = pool.borrowObject();
             addChild(fingerView);
-            if (_fingers.length <= id) {
-                _fingers.length = id + 1;
+            if (fingersCollection.length <= id) {
+                fingersCollection.length = id + 1;
             }
 
-            _fingers[id] = fingerView;
+            fingersCollection[id] = fingerView;
             return fingerView;
         }
     }
