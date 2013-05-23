@@ -103,7 +103,6 @@ package org.hyzhak.leapmotion.controller3D.fingers {
                 var finger:AbstractFingerView = collection[i];
                 if (finger && finger.useless) {
                     pool.returnObject(finger);
-                    trace("remove child", i);
                     removeChild(finger);
                     collection[i] = null;
                 }

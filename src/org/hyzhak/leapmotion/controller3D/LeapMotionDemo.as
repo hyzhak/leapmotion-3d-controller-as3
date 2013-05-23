@@ -16,6 +16,10 @@ package org.hyzhak.leapmotion.controller3D {
     import org.hyzhak.leapmotion.controller3D.fingers.ArrowFingerView;
 
     import org.hyzhak.leapmotion.controller3D.fingers.LeapMotionFingersView;
+    import org.hyzhak.leapmotion.controller3D.intersect.IIntersectable;
+    import org.hyzhak.leapmotion.controller3D.intersect.IntersectableObject3DAdapter;
+    import org.hyzhak.leapmotion.controller3D.intersect.LeapMotionIntersectSystem;
+    import org.hyzhak.leapmotion.controller3D.intersect.SelectionView;
     import org.hyzhak.leapmotion.controller3D.scene.DemoScene3D;
     import org.hyzhak.leapmotion.controller3D.skybox.bluecloud.BlueCloudSkyBox;
     import org.hyzhak.leapmotion.controller3D.skybox.gloomy.GloomySkyBox;
@@ -27,12 +31,15 @@ package org.hyzhak.leapmotion.controller3D {
         private var _scene:Scene3D;
         private var _gesture3DController:LeapMotionGesture3DController;
         private var _leapmotion:LeapMotionSystem;
+        private var _leapMotionIntersectSystem:LeapMotionIntersectSystem;
+        private var _selectionView:SelectionView;
 
         public function LeapMotionDemo() {
             stage.align = StageAlign.TOP_LEFT;
             stage.scaleMode = StageScaleMode.NO_SCALE;
 
             _leapmotion = new LeapMotionSystem();
+            _leapMotionIntersectSystem = new LeapMotionIntersectSystem(_leapmotion.controller);
             build3DScene();
         }
 
@@ -41,11 +48,17 @@ package org.hyzhak.leapmotion.controller3D {
             _scene.initInstance();
             addChild(_scene);
 
+            _selectionView = new SelectionView();
+            _scene.add3DObject(_selectionView);
+
             var scene:DemoScene3D = new DemoScene3D();
 
             var object:Object3D = scene.build();
 
             _gesture3DController = new LeapMotionGesture3DController(stage, object, _leapmotion.controller);
+            _leapMotionIntersectSystem.intersectables.addChild(
+                    new IntersectableObject3DAdapter(object, _selectionView)
+            );
 
             _scene.add3DObject(scene);
             _scene.add3DObject(new LeapMotionFingersView(_leapmotion.controller).withStage3D(stage.stage3Ds[0]));
