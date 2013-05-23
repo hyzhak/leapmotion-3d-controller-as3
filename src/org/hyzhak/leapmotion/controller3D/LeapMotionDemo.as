@@ -39,10 +39,12 @@ package org.hyzhak.leapmotion.controller3D {
         private function build3DScene():void {
             _scene = new Scene3D();
             _scene.initInstance();
+            addChild(_scene);
 
             var scene:DemoScene3D = new DemoScene3D();
 
             var object:Object3D = scene.build();
+
             _gesture3DController = new LeapMotionGesture3DController(stage, object, _leapmotion.controller);
 
             _scene.add3DObject(scene);
@@ -51,9 +53,7 @@ package org.hyzhak.leapmotion.controller3D {
 //            _scene.add3DObject(new SpaceSkyBox());
 //            _scene.add3DObject(new GloomySkyBox());
 
-
             validateSceneSize();
-            addChild(_scene);
 
             stage.addEventListener(Event.RESIZE, onStageResize);
         }
