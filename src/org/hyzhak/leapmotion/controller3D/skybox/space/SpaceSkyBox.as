@@ -20,10 +20,12 @@ package org.hyzhak.leapmotion.controller3D.skybox.space {
 
         public function SpaceSkyBox() {
             super(3000,
-                new TextureMaterial(left_t),		//Material for left side
-                new TextureMaterial(right_t), 		//Material for right side
                 new TextureMaterial(back_t), 		//Material for back side
                 new TextureMaterial(front_t), 		//Material for front side
+
+                new TextureMaterial(left_t),		//Material for left side
+                new TextureMaterial(right_t), 		//Material for right side
+
                 new TextureMaterial(bottom_t), 		//Material for bottom side
                 new TextureMaterial(top_t), 		//Material for top side
                 0.0);

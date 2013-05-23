@@ -13,6 +13,10 @@ package org.hyzhak.leapmotion.controller3D {
     import flash.display.StageScaleMode;
     import flash.events.Event;
 
+    import org.hyzhak.leapmotion.controller3D.fingers.LeapMotionFingersView;
+    import org.hyzhak.leapmotion.controller3D.skybox.bluecloud.BlueCloudSkyBox;
+    import org.hyzhak.leapmotion.controller3D.skybox.gloomy.GloomySkyBox;
+
     import org.hyzhak.leapmotion.controller3D.skybox.space.SpaceSkyBox;
 
     public class LeapMotionDemo extends Sprite {
@@ -54,7 +58,11 @@ package org.hyzhak.leapmotion.controller3D {
 
             _scene.initInstance();
             _scene.add3DObject(scene);
-            _scene.add3DObject(new SpaceSkyBox());
+            _scene.add3DObject(new BlueCloudSkyBox());
+//            _scene.add3DObject(new SpaceSkyBox());
+//            _scene.add3DObject(new GloomySkyBox());
+
+            _scene.add3DObject(new LeapMotionFingersView(_controller));
 
             validateSceneSize();
             addChild(_scene);
