@@ -24,7 +24,9 @@ package org.hyzhak.leapmotion.controller3D.fingers {
             instance = new this.FingerClass();
 
             for each (var boxResource:Resource in instance.getResources(true)) {
-                boxResource.upload(stage3D.context3D);
+                if (!boxResource.isUploaded) {
+                    boxResource.upload(stage3D.context3D);
+                }
             }
 
             return instance;

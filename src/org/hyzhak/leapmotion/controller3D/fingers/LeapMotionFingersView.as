@@ -23,7 +23,7 @@ package org.hyzhak.leapmotion.controller3D.fingers {
         private var _controller:Controller;
 
         private var _fingersPool:PointablesPool = new PointablesPool(ArrowFingerView);
-        private var _toolsPool:PointablesPool = new PointablesPool(BoxFingerView);
+        private var _toolsPool:PointablesPool = new PointablesPool(ToolFingerView);
 
         private var _fingers:Vector.<AbstractFingerView> = new <AbstractFingerView>[];
         private var _tools:Vector.<AbstractFingerView> = new <AbstractFingerView>[];
