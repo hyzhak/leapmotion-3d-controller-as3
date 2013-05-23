@@ -1,7 +1,6 @@
 package org.hyzhak.leapmotion.controller3D.intersect {
     import com.leapmotion.leap.Controller;
     import com.leapmotion.leap.Pointable;
-    import com.leapmotion.leap.Pointable;
     import com.leapmotion.leap.events.LeapEvent;
 
     import org.hyzhak.leapmotion.controller3D.PoolOfObjects;
@@ -43,23 +42,23 @@ package org.hyzhak.leapmotion.controller3D.intersect {
                 if (intersection && intersection.intersectable == intersectable) {
                     intersection.duration += deltaTime;
                     if (intersection.duration >= msecToHover) {
-                        intersection.hover = true;
+                        intersection.intersectable.hovered = true;
                     }
 
                     if (intersection.duration >= msecToSelect) {
-                        intersection.selected = true;
+                        intersection.intersectable.selected = true;
                     }
                 } else {
                     if (intersection) {
-                        intersection.hover = false;
-                        intersection.selected = false;
+                        intersection.intersectable.hovered = false;
+                        intersection.intersectable.selected = false;
+                        intersection.intersectable = null;
                         _childUnderFinger[i] = null;
                         _poolPointableIntersection.returnObject(intersection);
                     }
 
                     if (intersectable) {
                         intersection = _poolPointableIntersection.borrowObject();
-                        intersection.selected = false;
                         intersection.intersectable = intersectable;
                         intersection.duration = 0;
                         _childUnderFinger[i] = intersection;
@@ -75,42 +74,4 @@ import org.hyzhak.leapmotion.controller3D.intersect.IIntersectable;
 internal class PointableIntersection {
     public var intersectable:IIntersectable;
     public var duration:int;
-
-    private var _hover:Boolean;
-    private var _selected:Boolean;
-
-    public function get hover():Boolean {
-        return _hover;
-    }
-
-    public function set hover(value:Boolean):void {
-        if (_hover == value) {
-            return;
-        }
-
-        _hover = value;
-
-        if (value) {
-            intersectable.hover();
-        } else {
-            intersectable.unhover();
-        }
-    }
-
-    public function get selected():Boolean {
-        return _selected;
-    }
-
-    public function set selected(value:Boolean):void {
-        if (_selected == value) {
-            return;
-        }
-
-        _selected = value;
-        if (value) {
-            intersectable.select();
-        } else {
-            intersectable.unselect();
-        }
-    }
 }
