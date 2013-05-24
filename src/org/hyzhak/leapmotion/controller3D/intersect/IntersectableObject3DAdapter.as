@@ -35,9 +35,10 @@ package org.hyzhak.leapmotion.controller3D.intersect {
                     _bounds.minZ <= z && z < _bounds.maxZ;
         }
 
-        public function hover(pointable:Pointable):Boolean {
-            var id:int = pointable.id;
+        public function hover(id:int, pointable:Pointable):Boolean {
             if (_pointables.getObject(id)) {
+                //update with new pointable
+                _pointables.putObject(id, pointable);
                 return false;
             }
 
@@ -50,13 +51,12 @@ package org.hyzhak.leapmotion.controller3D.intersect {
             return true;
         }
 
-        public function unhover(pointable:Pointable):Boolean {
-            var id:int = pointable.id;
+        public function unhover(id:int):Boolean {
             if (!_pointables.getObject(id)) {
                 return false;
             }
 
-            _pointables.remove(pointable.id);
+            _pointables.remove(id);
             if (_pointables.size() <= 0) {
                 hovered = false;
             }

@@ -5,6 +5,7 @@ package org.hyzhak.leapmotion.controller3D.intersect {
     import com.leapmotion.leap.events.LeapEvent;
 
     import flash.events.EventDispatcher;
+    import flash.utils.Dictionary;
 
     import org.hyzhak.leapmotion.controller3D.PoolOfObjects;
 
@@ -63,7 +64,7 @@ package org.hyzhak.leapmotion.controller3D.intersect {
                     }
                 } else {
                     if (intersection) {
-                        unhover(intersection, id, pointable);
+                        unhover(intersection, id);
                     }
 
                     if (intersectable) {
@@ -93,32 +94,29 @@ package org.hyzhak.leapmotion.controller3D.intersect {
             for(var i:int = 0, count:int = _childUnderFinger.length; i < count; i++) {
                 var intersection:Intersection = _childUnderFinger[i];
                 if (intersection && intersection.unprocessed) {
-                    var collection:Object = intersection.intersectable.pointables.collection;
-                    for each(var pointable in collection) {
-                        unhover(intersection, i, pointable);
-                    }
+                    unhover(intersection, i);
                 }
             }
         }
 
         private function hover(intersection:Intersection, pointable:Pointable):void {
-            if (intersection.intersectable.hover(pointable)) {
+            if (intersection.intersectable.hover(pointable.id, pointable)) {
                 dispatchEvent(new IntersectEvent(IntersectEvent.HOVER, intersection.intersectable));
             }
         }
 
-        private function unhover(intersection:Intersection, index:int, pointable:Pointable):void {
+        private function unhover(intersection:Intersection, id:int):void {
             if (intersection == null || intersection.intersectable == null) {
                 return;
             }
 
-            if (intersection.intersectable.unhover(pointable)) {
+            if (intersection.intersectable.unhover(id)) {
                 dispatchEvent(new IntersectEvent(IntersectEvent.UNHOVER, intersection.intersectable));
 
-                if (_childUnderFinger.length <= index) {
+                if (_childUnderFinger.length <= id) {
                     throw new Error("Wrong index");
                 }
-                _childUnderFinger[index] = null;
+                _childUnderFinger[id] = null;
                 intersection.intersectable = null;
                 _poolPointableIntersection.returnObject(intersection);
             }

@@ -102,7 +102,7 @@ package org.hyzhak.leapmotion.controller3D {
 
             _gesture3DController = new LeapMotionGesture3DController(stage, object, _leapmotion.controller);
             _leapMotionIntersectSystem.intersectables.addChild(
-                    new IntersectableObject3DAdapter(object, _selectionView)
+                new IntersectableObject3DAdapter(object, _selectionView)
             );
 
             _scene.add3DObject(scene);
