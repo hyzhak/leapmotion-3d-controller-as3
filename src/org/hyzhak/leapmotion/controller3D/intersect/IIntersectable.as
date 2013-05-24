@@ -8,5 +8,7 @@ package org.hyzhak.leapmotion.controller3D.intersect {
         function isIntersect(x:Number, y:Number, z:Number):Boolean;
 
         function get pointables():Map;
+
+        function shift(dx:Number, dy:Number, dz:Number):void;
     }
 }

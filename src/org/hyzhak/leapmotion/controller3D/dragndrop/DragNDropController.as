@@ -1,6 +1,4 @@
 package org.hyzhak.leapmotion.controller3D.dragndrop {
-    import alternativa.engine3d.core.Object3D;
-
     import com.leapmotion.leap.Controller;
     import com.leapmotion.leap.Frame;
     import com.leapmotion.leap.Matrix;
@@ -10,11 +8,8 @@ package org.hyzhak.leapmotion.controller3D.dragndrop {
 
     import flash.utils.Dictionary;
 
-    import org.hyzhak.leapmotion.controller3D.IObject3DInterection;
-
     import org.hyzhak.leapmotion.controller3D.MatrixUtil;
     import org.hyzhak.leapmotion.controller3D.PoolOfObjects;
-
     import org.hyzhak.leapmotion.controller3D.intersect.IIntersectable;
 
     public class DragNDropController {
@@ -23,8 +18,6 @@ package org.hyzhak.leapmotion.controller3D.dragndrop {
         public var controller:Controller;
 
         public var intersectable:IIntersectable;
-
-        public var interaction:IObject3DInterection;
 
         private var _poolOfPointablePosition:PoolOfObjects = new PoolOfObjects(PointablePosition);
         private var _startedPosition:Vector.<PointablePosition> = new <PointablePosition>[];
@@ -108,7 +101,7 @@ package org.hyzhak.leapmotion.controller3D.dragndrop {
                     throw new Error();
                 }
                 trace("shift", dx, dy, dz);
-                interaction.shift(dx, dy, dz);
+                intersectable.shift(dx, dy, dz);
             }
         }
     }

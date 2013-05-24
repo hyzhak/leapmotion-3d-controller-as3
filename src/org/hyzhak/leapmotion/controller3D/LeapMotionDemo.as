@@ -24,7 +24,7 @@ package org.hyzhak.leapmotion.controller3D {
     import org.hyzhak.leapmotion.controller3D.fingers.LeapMotionFingersView;
     import org.hyzhak.leapmotion.controller3D.intersect.IIntersectable;
     import org.hyzhak.leapmotion.controller3D.intersect.IntersectEvent;
-    import org.hyzhak.leapmotion.controller3D.intersect.IntersectableObject3DAdapter;
+    import org.hyzhak.leapmotion.controller3D.intersect.alternativa3D.IntersectableObject3DAdapter;
     import org.hyzhak.leapmotion.controller3D.intersect.LeapMotionIntersectSystem;
     import org.hyzhak.leapmotion.controller3D.intersect.Map;
     import org.hyzhak.leapmotion.controller3D.intersect.SelectionViewBuilder;
@@ -59,7 +59,7 @@ package org.hyzhak.leapmotion.controller3D {
         private function onHover(event:IntersectEvent):void {
             var pointables:Map = event.intersectable.pointables;
             if (pointables.size() >= 2) {
-                startDragByLeapMotion(event.intersectable, event.intersectable as IObject3DInterection);
+                startDragByLeapMotion(event.intersectable);
             }
         }
 
@@ -70,14 +70,13 @@ package org.hyzhak.leapmotion.controller3D {
             }
         }
 
-        private function startDragByLeapMotion(intersectable:IIntersectable, interaction:IObject3DInterection):void {
+        private function startDragByLeapMotion(intersectable:IIntersectable):void {
             var dragNDropController:DragNDropController = _dragNDropControllers[intersectable];
             if (dragNDropController == null) {
                 //TODO : optimization - borrow dragNDropController from pool of objects
                 dragNDropController = new DragNDropController();
                 dragNDropController.controller = _leapmotion.controller;
                 dragNDropController.intersectable = intersectable;
-                dragNDropController.interaction = interaction;
                 dragNDropController.transformation = _leapmotion.transformation;
 
                 _dragNDropControllers[intersectable] = dragNDropController;
@@ -105,7 +104,8 @@ package org.hyzhak.leapmotion.controller3D {
 
             var selectionViewBuilder:SelectionViewBuilder = new SelectionViewBuilder().withStage3D(stage.stage3Ds[0]);
 
-            _gesture3DController = new LeapMotionGesture3DController(stage, object, _leapmotion.controller);
+            //_gesture3DController = new LeapMotionGesture3DController(stage, object, _leapmotion.controller);
+
             _leapMotionIntersectSystem.intersectables.addChild(
                 new IntersectableObject3DAdapter(object, selectionViewBuilder)
             );

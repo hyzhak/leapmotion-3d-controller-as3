@@ -1,13 +1,13 @@
-package org.hyzhak.leapmotion.controller3D.intersect {
+package org.hyzhak.leapmotion.controller3D.intersect.alternativa3D {
     import alternativa.engine3d.core.BoundBox;
     import alternativa.engine3d.core.Object3D;
     import alternativa.engine3d.utils.Object3DUtils;
 
     import com.leapmotion.leap.Pointable;
 
-    import org.hyzhak.leapmotion.controller3D.IObject3DInterection;
+    import org.hyzhak.leapmotion.controller3D.intersect.*;
 
-    public class IntersectableObject3DAdapter implements IIntersectable, IObject3DInterection{
+    public class IntersectableObject3DAdapter implements IIntersectable {
         private var _object:Object3D;
         private var _bounds:BoundBox;
         private var _selectionView:SelectionViewBuilder;
@@ -72,10 +72,6 @@ package org.hyzhak.leapmotion.controller3D.intersect {
 
         private var _hover:Boolean;
 
-        private function get hovered():Boolean {
-            return _hover;
-        }
-
         private function set hovered(value:Boolean):void {
             if (_hover == value) {
                 return;
@@ -83,10 +79,12 @@ package org.hyzhak.leapmotion.controller3D.intersect {
 
             _hover = value;
 
-            if (value) {
-                _selectionView.hover(_object, _bounds);
-            } else {
-                _selectionView.unhover(_object, _bounds);
+            if (_selectionView) {
+                if (value) {
+                    _selectionView.hover(_object, _bounds);
+                } else {
+                    _selectionView.unhover(_object, _bounds);
+                }
             }
         }
 
