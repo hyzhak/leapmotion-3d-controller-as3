@@ -18,6 +18,7 @@ package org.hyzhak.leapmotion.controller3D {
 
     import org.hyzhak.leapmotion.controller3D.fingers.LeapMotionFingersView;
     import org.hyzhak.leapmotion.controller3D.intersect.IIntersectable;
+    import org.hyzhak.leapmotion.controller3D.intersect.IntersectEvent;
     import org.hyzhak.leapmotion.controller3D.intersect.IntersectableObject3DAdapter;
     import org.hyzhak.leapmotion.controller3D.intersect.LeapMotionIntersectSystem;
     import org.hyzhak.leapmotion.controller3D.intersect.SelectionViewBuilder;
@@ -41,7 +42,17 @@ package org.hyzhak.leapmotion.controller3D {
 
             _leapmotion = new LeapMotionSystem();
             _leapMotionIntersectSystem = new LeapMotionIntersectSystem(_leapmotion.controller);
+            _leapMotionIntersectSystem.addEventListener(IntersectEvent.HOVER, onHover);
+            _leapMotionIntersectSystem.addEventListener(IntersectEvent.UNHOVER, onUnHover);
             build3DScene();
+        }
+
+        private function onHover(event:IntersectEvent):void {
+            trace("on hover", event.intersectable);
+        }
+
+        private function onUnHover(event:IntersectEvent):void {
+            trace("on unhover", event.intersectable);
         }
 
         private function build3DScene():void {

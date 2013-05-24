@@ -3,9 +3,13 @@ package org.hyzhak.leapmotion.controller3D.intersect {
     import com.leapmotion.leap.Pointable;
     import com.leapmotion.leap.events.LeapEvent;
 
+    import flash.events.EventDispatcher;
+
     import org.hyzhak.leapmotion.controller3D.PoolOfObjects;
 
-    public class LeapMotionIntersectSystem {
+    [Event(name="hover", type="org.hyzhak.leapmotion.controller3D.intersect.IntersectEvent")]
+    [Event(name="unhover", type="org.hyzhak.leapmotion.controller3D.intersect.IntersectEvent")]
+    public class LeapMotionIntersectSystem extends EventDispatcher {
         public var msecToHover:int = 0;
         public var msecToSelect:int = 1000;
         //public var msecToUnSelect:int = 100;
@@ -43,6 +47,9 @@ package org.hyzhak.leapmotion.controller3D.intersect {
                 if (intersection && intersection.intersectable == intersectable) {
                     intersection.duration += deltaTime;
                     if (intersection.duration >= msecToHover) {
+                        if (!intersection.intersectable.hovered) {
+                            dispatchEvent(new IntersectEvent(IntersectEvent.HOVER, intersection.intersectable));
+                        }
                         intersection.intersectable.hovered = true;
                     }
 
@@ -51,6 +58,9 @@ package org.hyzhak.leapmotion.controller3D.intersect {
                     }
                 } else {
                     if (intersection) {
+                        if (intersection.intersectable.hovered) {
+                            dispatchEvent(new IntersectEvent(IntersectEvent.UNHOVER, intersection.intersectable));
+                        }
                         intersection.intersectable.hovered = false;
                         intersection.intersectable.selected = false;
                         _childUnderFinger[i] = null;
