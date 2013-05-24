@@ -5,6 +5,7 @@ package org.hyzhak.leapmotion.controller3D {
     import com.leapmotion.leap.Finger;
     import com.leapmotion.leap.Frame;
     import com.leapmotion.leap.Gesture;
+    import com.leapmotion.leap.Matrix;
     import com.leapmotion.leap.Vector3;
     import com.leapmotion.leap.events.LeapEvent;
 
@@ -43,11 +44,13 @@ package org.hyzhak.leapmotion.controller3D {
         private var _dragNDropControllers:Dictionary = new Dictionary();
 
         public function LeapMotionDemo() {
+
             stage.align = StageAlign.TOP_LEFT;
             stage.scaleMode = StageScaleMode.NO_SCALE;
 
             _leapmotion = new LeapMotionSystem();
             _leapMotionIntersectSystem = new LeapMotionIntersectSystem(_leapmotion.controller);
+            _leapMotionIntersectSystem.transformation = _leapmotion.transformation;
             _leapMotionIntersectSystem.addEventListener(IntersectEvent.HOVER, onHover);
             _leapMotionIntersectSystem.addEventListener(IntersectEvent.UNHOVER, onUnHover);
             build3DScene();
@@ -109,7 +112,8 @@ package org.hyzhak.leapmotion.controller3D {
 
             var fingersView:LeapMotionFingersView = new LeapMotionFingersView(_leapmotion.controller);
             fingersView.withStage3D = stage.stage3Ds[0];
-            fingersView.transformation.setRotation(new Vector3(1, 0, 0), Math.PI / 2);
+            fingersView.transformation = _leapmotion.transformation;
+
             _scene.add3DObject(fingersView);
             _scene.add3DObject(new BlueCloudSkyBox());
 //            _scene.add3DObject(new SpaceSkyBox());

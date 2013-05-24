@@ -75,11 +75,13 @@ package org.hyzhak.leapmotion.controller3D.fingers {
                 }
                 view.useless = false;
 
-                var tipPosition:Vector3 = MatrixUtil.transformPointWithoutCreation(pointable.tipPosition, transformation);
+                var tipPosition:Vector3 = MatrixUtil.transformPoint(pointable.tipPosition, transformation);
                 //var tipPosition:Vector3 = transformation.transformPoint(pointable.tipPosition);
                 view.x = tipPosition.x;
                 view.y = tipPosition.y;
                 view.z = tipPosition.z;
+
+                MatrixUtil.poolOfVector3.returnObject(tipPosition);
 
                 //view.x = scale * tipPosition.x;
                 //view.y = -scale * tipPosition.z;

@@ -4,6 +4,8 @@ package org.hyzhak.leapmotion.controller3D {
     import com.leapmotion.leap.Controller;
     import com.leapmotion.leap.Frame;
     import com.leapmotion.leap.Gesture;
+    import com.leapmotion.leap.Matrix;
+    import com.leapmotion.leap.Vector3;
     import com.leapmotion.leap.events.LeapEvent;
 
     import flash.display.InteractiveObject;
@@ -15,12 +17,17 @@ package org.hyzhak.leapmotion.controller3D {
     import org.hyzhak.leapmotion.controller3D.gestures.TraceGestureController;
 
     public class LeapMotionGesture3DController {
+
+        private var leapMotionTransformation:Matrix;
         private var _object:Object3D;
         private var _controller:Controller;
 
         private var _gestureControllers:Object = {};
 
         public function LeapMotionGesture3DController(eventSource:InteractiveObject, object:Object3D, controller: Controller, debugDrawView:Sprite = null) {
+            leapMotionTransformation = Matrix.identity();
+            leapMotionTransformation.setRotation(new Vector3(1, 0, 0), Math.PI / 2);
+
             _object = object;
 
             _gestureControllers[Gesture.TYPE_CIRCLE] = [

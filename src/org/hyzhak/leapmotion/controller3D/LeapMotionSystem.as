@@ -1,12 +1,19 @@
 package org.hyzhak.leapmotion.controller3D {
     import com.leapmotion.leap.Controller;
     import com.leapmotion.leap.Gesture;
+    import com.leapmotion.leap.Matrix;
+    import com.leapmotion.leap.Vector3;
     import com.leapmotion.leap.events.LeapEvent;
 
     public class LeapMotionSystem {
+        public var transformation:Matrix;
+
         private var _controller:Controller;
 
         public function LeapMotionSystem() {
+            transformation = Matrix.identity();
+            transformation.setRotation(new Vector3(1, 0, 0), Math.PI / 2);
+
             _controller = new Controller();
 
             _controller.addEventListener( LeapEvent.LEAPMOTION_INIT, onInit );

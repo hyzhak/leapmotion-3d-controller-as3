@@ -3,17 +3,20 @@ package org.hyzhak.leapmotion.controller3D.intersect {
     import com.leapmotion.leap.Frame;
     import com.leapmotion.leap.Matrix;
     import com.leapmotion.leap.Pointable;
+    import com.leapmotion.leap.Vector3;
     import com.leapmotion.leap.events.LeapEvent;
 
     import flash.events.EventDispatcher;
     import flash.utils.Dictionary;
+
+    import org.hyzhak.leapmotion.controller3D.MatrixUtil;
 
     import org.hyzhak.leapmotion.controller3D.PoolOfObjects;
 
     [Event(name="hover", type="org.hyzhak.leapmotion.controller3D.intersect.IntersectEvent")]
     [Event(name="unhover", type="org.hyzhak.leapmotion.controller3D.intersect.IntersectEvent")]
     public class LeapMotionIntersectSystem extends EventDispatcher {
-        public var transform:Matrix = Matrix.identity();
+        public var transformation:Matrix = Matrix.identity();
 
         //The timestamp in microseconds.
         public var microsecondToHover:int = 0;
@@ -51,7 +54,9 @@ package org.hyzhak.leapmotion.controller3D.intersect {
                 var pointable:Pointable = pointables[i];
                 var id:int = pointable.id;
 
-                var intersectable:IIntersectable = intersectables.getChildAt(transform.transformPoint(pointable.tipPosition));
+                var vec:Vector3 = MatrixUtil.transformPoint(pointable.tipPosition, transformation);
+                var intersectable:IIntersectable = intersectables.getChildAt(vec);
+                MatrixUtil.poolOfVector3.returnObject(vec);
 
                 var intersection:Intersection = null;
 

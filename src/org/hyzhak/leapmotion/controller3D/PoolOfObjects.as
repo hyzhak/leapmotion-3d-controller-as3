@@ -4,8 +4,11 @@ package org.hyzhak.leapmotion.controller3D {
 
         private var _ClassOfObjects:Class;
 
-        public function PoolOfObjects(FingerClass:Class) {
-            this._ClassOfObjects = FingerClass;
+        private var _factoryFunction:Function;
+
+        public function PoolOfObjects(FingerClass:Class, factoryFunction:Function = null) {
+            _ClassOfObjects = FingerClass;
+            _factoryFunction = factoryFunction;
         }
 
         public function borrowObject():* {
@@ -14,7 +17,11 @@ package org.hyzhak.leapmotion.controller3D {
                 return instance;
             }
 
-            return new this._ClassOfObjects();
+            if (_factoryFunction) {
+                return _factoryFunction();
+            } else {
+                return new this._ClassOfObjects();
+            }
         }
 
         public function returnObject(object:Object):void {
