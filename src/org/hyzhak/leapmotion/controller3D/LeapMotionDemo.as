@@ -13,6 +13,9 @@ package org.hyzhak.leapmotion.controller3D {
     import flash.display.StageAlign;
     import flash.display.StageScaleMode;
     import flash.events.Event;
+    import flash.utils.Dictionary;
+
+    import org.hyzhak.leapmotion.controller3D.dragndrop.DragNDropController;
 
     import org.hyzhak.leapmotion.controller3D.fingers.ArrowFingerView;
 
@@ -21,6 +24,7 @@ package org.hyzhak.leapmotion.controller3D {
     import org.hyzhak.leapmotion.controller3D.intersect.IntersectEvent;
     import org.hyzhak.leapmotion.controller3D.intersect.IntersectableObject3DAdapter;
     import org.hyzhak.leapmotion.controller3D.intersect.LeapMotionIntersectSystem;
+    import org.hyzhak.leapmotion.controller3D.intersect.Map;
     import org.hyzhak.leapmotion.controller3D.intersect.SelectionViewBuilder;
     import org.hyzhak.leapmotion.controller3D.scene.DemoScene3D;
     import org.hyzhak.leapmotion.controller3D.skybox.bluecloud.BlueCloudSkyBox;
@@ -36,6 +40,8 @@ package org.hyzhak.leapmotion.controller3D {
         private var _leapMotionIntersectSystem:LeapMotionIntersectSystem;
         private var _selectionView:SelectionViewBuilder;
 
+        private var _dragNDropControllers:Dictionary = new Dictionary();
+
         public function LeapMotionDemo() {
             stage.align = StageAlign.TOP_LEFT;
             stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -48,11 +54,39 @@ package org.hyzhak.leapmotion.controller3D {
         }
 
         private function onHover(event:IntersectEvent):void {
-            //trace("on hover", event.intersectable);
+            var pointables:Map = event.intersectable.pointables;
+            if (pointables.size() > 2) {
+                startDragByLeapMotion(event.intersectable);
+            }
         }
 
         private function onUnHover(event:IntersectEvent):void {
-            //trace("on unhover", event.intersectable);
+            var pointables:Map = event.intersectable.pointables;
+            if (pointables.size() < 2) {
+                stopDragByLeapMotion(event.intersectable);
+            }
+        }
+
+        private function startDragByLeapMotion(intersectable:IIntersectable):void {
+            var dragNDropController:DragNDropController = _dragNDropControllers[intersectable];
+            if (dragNDropController == null) {
+                //TODO : optimization - borrow dragNDropController from pool of objects
+                dragNDropController = new DragNDropController();
+                dragNDropController.controller = _leapmotion.controller;
+                dragNDropController.intersectable = intersectable;
+
+                _dragNDropControllers[intersectable] = dragNDropController;
+                dragNDropController.start();
+            }
+        }
+
+        private function stopDragByLeapMotion(intersectable:IIntersectable):void {
+            var dragNDropController:DragNDropController = _dragNDropControllers[intersectable];
+            if (dragNDropController) {
+                dragNDropController.stop();
+                delete _dragNDropControllers[intersectable];
+                //TODO: optimization - return dragNDropController to pool of objects
+            }
         }
 
         private function build3DScene():void {

@@ -28,7 +28,7 @@ package org.hyzhak.leapmotion.controller3D.intersect {
             delete _map[key];
         }
 
-        public function get collection():Object {
+        public function get collection():Dictionary {
             return _map;
         }
 
