@@ -20,7 +20,6 @@ package org.hyzhak.leapmotion.controller3D {
             _controller.addEventListener( LeapEvent.LEAPMOTION_CONNECTED, onConnect );
             _controller.addEventListener( LeapEvent.LEAPMOTION_DISCONNECTED, onDisconnect );
             _controller.addEventListener( LeapEvent.LEAPMOTION_EXIT, onExit );
-//            _controller.addEventListener( LeapEvent.LEAPMOTION_FRAME, onFrame );
         }
 
         public function get controller():Controller {

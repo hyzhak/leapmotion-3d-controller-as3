@@ -5,8 +5,6 @@ package org.hyzhak.leapmotion.controller3D.gestures {
     import com.leapmotion.leap.SwipeGesture;
     import com.leapmotion.leap.Vector3;
 
-    import org.hyzhak.leapmotion.controller3D.IGestureController;
-
     public class SwipeGestureController implements IGestureController {
         public var rotationMultiplier:Number = 0.0003;
         public var rotationAcceleration:Number = 0.1;

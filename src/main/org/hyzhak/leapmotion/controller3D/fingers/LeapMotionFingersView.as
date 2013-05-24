@@ -3,21 +3,14 @@ package org.hyzhak.leapmotion.controller3D.fingers {
     import alternativa.engine3d.core.events.Event3D;
 
     import com.leapmotion.leap.Controller;
-    import com.leapmotion.leap.Finger;
     import com.leapmotion.leap.Matrix;
     import com.leapmotion.leap.Pointable;
     import com.leapmotion.leap.Vector3;
     import com.leapmotion.leap.events.LeapEvent;
-    import com.leapmotion.leap.util.LeapUtil;
 
     import flash.display.Stage3D;
 
-    import flash.utils.setTimeout;
-
-    import org.hyzhak.leapmotion.controller3D.LeapMotionDemo;
     import org.hyzhak.utils.MatrixUtil;
-
-    import org.hyzhak.leapmotion.controller3D.fingers.AbstractFingerView;
 
     public class LeapMotionFingersView extends Object3D {
         public var transformation:Matrix = Matrix.identity();
@@ -75,24 +68,16 @@ package org.hyzhak.leapmotion.controller3D.fingers {
                 }
                 view.useless = false;
 
-                var tipPosition:Vector3 = MatrixUtil.transformPoint(pointable.tipPosition, transformation);
-                //var tipPosition:Vector3 = transformation.transformPoint(pointable.tipPosition);
-                view.x = tipPosition.x;
-                view.y = tipPosition.y;
-                view.z = tipPosition.z;
+                var vec:Vector3 = MatrixUtil.transformPoint(pointable.tipPosition, transformation);
+                view.x = vec.x;
+                view.y = vec.y;
+                view.z = vec.z;
+                MatrixUtil.poolOfVector3.returnObject(vec);
 
-                MatrixUtil.poolOfVector3.returnObject(tipPosition);
-
-                //view.x = scale * tipPosition.x;
-                //view.y = -scale * tipPosition.z;
-                //view.z = scale * tipPosition.y;
-
-//                view.scaleY = pointable.length;
-                view.rotationX = Math.PI / 2 + pointable.direction.pitch;
-                view.rotationZ = -pointable.direction.yaw;//Math.PI / 2;
-                //view.rotationZ = Math.PI / 2;
-                //view.rotationZ = pointable.direction.yaw;
-//                view.rotationZ = finger.direction.roll;
+                vec = MatrixUtil.transformPoint(pointable.direction, transformation);
+                view.rotationX = vec.pitch;
+                view.rotationZ = vec.roll + Math.PI;
+                MatrixUtil.poolOfVector3.returnObject(vec);
             }
 
             sweepUnusedFingers(_fingers, _fingersPool);

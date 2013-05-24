@@ -3,8 +3,6 @@ package org.hyzhak.leapmotion.controller3D.gestures {
 
     import com.leapmotion.leap.Gesture;
 
-    import org.hyzhak.leapmotion.controller3D.IGestureController;
-
     public class TraceGestureController implements IGestureController {
         private var _count:int = 0;
         private var _duration:Number = 0.0;

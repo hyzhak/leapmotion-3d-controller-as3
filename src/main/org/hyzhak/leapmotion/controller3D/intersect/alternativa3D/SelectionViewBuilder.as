@@ -1,4 +1,4 @@
-package org.hyzhak.leapmotion.controller3D.intersect {
+package org.hyzhak.leapmotion.controller3D.intersect.alternativa3D {
     import alternativa.engine3d.core.BoundBox;
     import alternativa.engine3d.core.Object3D;
     import alternativa.engine3d.core.Resource;

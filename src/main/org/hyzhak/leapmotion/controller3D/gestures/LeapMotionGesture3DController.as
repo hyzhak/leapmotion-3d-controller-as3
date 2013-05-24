@@ -1,4 +1,4 @@
-package org.hyzhak.leapmotion.controller3D {
+package org.hyzhak.leapmotion.controller3D.gestures {
     import alternativa.engine3d.core.Object3D;
 
     import com.leapmotion.leap.Controller;
@@ -11,10 +11,6 @@ package org.hyzhak.leapmotion.controller3D {
     import flash.display.InteractiveObject;
     import flash.display.Sprite;
     import flash.events.Event;
-
-    import org.hyzhak.leapmotion.controller3D.gestures.CircleGestureController;
-    import org.hyzhak.leapmotion.controller3D.gestures.SwipeGestureController;
-    import org.hyzhak.leapmotion.controller3D.gestures.TraceGestureController;
 
     public class LeapMotionGesture3DController {
 

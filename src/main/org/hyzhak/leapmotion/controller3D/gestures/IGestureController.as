@@ -1,4 +1,4 @@
-package org.hyzhak.leapmotion.controller3D {
+package org.hyzhak.leapmotion.controller3D.gestures {
     import alternativa.engine3d.core.Object3D;
 
     import com.leapmotion.leap.Gesture;

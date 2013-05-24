@@ -9,11 +9,12 @@ package org.hyzhak.leapmotion.controller3D {
 
     import org.hyzhak.leapmotion.controller3D.dragndrop.DragNDropController;
     import org.hyzhak.leapmotion.controller3D.fingers.LeapMotionFingersView;
+    import org.hyzhak.leapmotion.controller3D.gestures.LeapMotionGesture3DController;
     import org.hyzhak.leapmotion.controller3D.intersect.IIntersectable;
     import org.hyzhak.leapmotion.controller3D.intersect.IntersectEvent;
     import org.hyzhak.leapmotion.controller3D.intersect.LeapMotionIntersectSystem;
     import org.hyzhak.leapmotion.controller3D.intersect.Map;
-    import org.hyzhak.leapmotion.controller3D.intersect.SelectionViewBuilder;
+    import org.hyzhak.leapmotion.controller3D.intersect.alternativa3D.SelectionViewBuilder;
     import org.hyzhak.leapmotion.controller3D.intersect.alternativa3D.IntersectableObject3DAdapter;
     import org.hyzhak.leapmotion.controller3D.scene.DemoScene3D;
     import org.hyzhak.leapmotion.controller3D.skybox.bluecloud.BlueCloudSkyBox;

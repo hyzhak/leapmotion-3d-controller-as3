@@ -88,7 +88,6 @@ package org.hyzhak.leapmotion.controller3D.intersect.alternativa3D {
             }
         }
 
-
         public function select():void {
             selected = true;
         }
