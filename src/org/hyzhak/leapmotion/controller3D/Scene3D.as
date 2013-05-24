@@ -24,8 +24,6 @@ package org.hyzhak.leapmotion.controller3D {
 
         private var _cameraContainer : MouseCameraController;
 
-        public var demoScene : DemoScene3D;
-
         public function initInstance() : void {
             _rootContainer = new Object3D();
 
@@ -67,8 +65,6 @@ package org.hyzhak.leapmotion.controller3D {
 
             buildCamera();
 
-            buildScene();
-
             initCameraView();
 
             buildCameraController();
@@ -87,15 +83,6 @@ package org.hyzhak.leapmotion.controller3D {
 
             _camera = new Camera3D(1, 50000);
             _camera.view = new View(1, 1, false, 0x393939, 1, 4);
-//            camera.effectMode = 9;
-//            camera.ssaoAngular.secondPassOccludingRadius = 1.189999999999999;
-//            camera.ssaoAngular.angleThreshold = 0.30000000000000004;
-//            camera.ssaoAngular.occludingRadius = 39.800000000000296;
-//            camera.ssaoAngular.secondPassAmount = 0.8999999999999992;
-//            camera.ssaoAngular.maxDistance = 33.7;
-//            camera.ssaoAngular.falloff = 316;
-//            camera.ssaoAngular.intensity = 0.7499999999999999;
-//            previewModel.camera = camera;
         }
 
         private function buildCameraController() : void {
@@ -107,13 +94,7 @@ package org.hyzhak.leapmotion.controller3D {
             _cameraContainer.rotationX = -Math.PI / 6;
             _cameraContainer.rotationY = 0;
             _cameraContainer.rotationZ = Math.PI / 6;
-            _cameraContainer.distance = -200;
-        }
-
-        private function buildScene() : void {
-            // var tr:TextureResource = new TextureResource();
-//            demoScene.forStage3D(_stage3D).build();
-//            _rootContainer.addChild(demoScene);
+            _cameraContainer.distance = -500;
         }
 
         private function initCameraView() : void {
