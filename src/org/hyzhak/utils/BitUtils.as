@@ -1,4 +1,4 @@
-package org.hyzhak.leapmotion.controller3D
+package org.hyzhak.utils
 {
 	import flash.display.BitmapData;
 

@@ -8,8 +8,8 @@ package org.hyzhak.leapmotion.controller3D.dragndrop {
 
     import flash.utils.Dictionary;
 
-    import org.hyzhak.leapmotion.controller3D.MatrixUtil;
-    import org.hyzhak.leapmotion.controller3D.PoolOfObjects;
+    import org.hyzhak.utils.MatrixUtil;
+    import org.hyzhak.utils.PoolOfObjects;
     import org.hyzhak.leapmotion.controller3D.intersect.IIntersectable;
 
     public class DragNDropController {
@@ -24,10 +24,12 @@ package org.hyzhak.leapmotion.controller3D.dragndrop {
 
         public function start():void {
             controller.addEventListener(LeapEvent.LEAPMOTION_FRAME, onFrame);
+            intersectable.select();
         }
 
         public function stop():void {
             controller.removeEventListener(LeapEvent.LEAPMOTION_FRAME, onFrame);
+            intersectable.unselect();
         }
 
         private function onFrame(event:LeapEvent):void {

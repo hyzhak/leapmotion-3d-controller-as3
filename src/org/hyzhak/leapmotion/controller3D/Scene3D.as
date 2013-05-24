@@ -11,8 +11,6 @@ package org.hyzhak.leapmotion.controller3D {
     import flash.display3D.Context3D;
     import flash.events.Event;
 
-    import org.hyzhak.leapmotion.controller3D.scene.DemoScene3D;
-
     public class Scene3D extends Sprite {
         private var _rootContainer : Object3D;
 
@@ -39,8 +37,8 @@ package org.hyzhak.leapmotion.controller3D {
             return _stage3D;
         }
 
-        public function add3DObject(obj:Object3D):void {
-            _rootContainer.addChild(obj);
+        public function get rootContainer():Object3D {
+            return _rootContainer;
         }
 
         private function onAddedToStage(event : Event) : void {

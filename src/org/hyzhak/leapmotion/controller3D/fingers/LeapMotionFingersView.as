@@ -15,7 +15,7 @@ package org.hyzhak.leapmotion.controller3D.fingers {
     import flash.utils.setTimeout;
 
     import org.hyzhak.leapmotion.controller3D.LeapMotionDemo;
-    import org.hyzhak.leapmotion.controller3D.MatrixUtil;
+    import org.hyzhak.utils.MatrixUtil;
 
     import org.hyzhak.leapmotion.controller3D.fingers.AbstractFingerView;
 

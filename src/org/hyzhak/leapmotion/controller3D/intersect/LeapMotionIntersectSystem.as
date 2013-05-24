@@ -7,11 +7,9 @@ package org.hyzhak.leapmotion.controller3D.intersect {
     import com.leapmotion.leap.events.LeapEvent;
 
     import flash.events.EventDispatcher;
-    import flash.utils.Dictionary;
 
-    import org.hyzhak.leapmotion.controller3D.MatrixUtil;
-
-    import org.hyzhak.leapmotion.controller3D.PoolOfObjects;
+    import org.hyzhak.utils.MatrixUtil;
+    import org.hyzhak.utils.PoolOfObjects;
 
     [Event(name="hover", type="org.hyzhak.leapmotion.controller3D.intersect.IntersectEvent")]
     [Event(name="unhover", type="org.hyzhak.leapmotion.controller3D.intersect.IntersectEvent")]

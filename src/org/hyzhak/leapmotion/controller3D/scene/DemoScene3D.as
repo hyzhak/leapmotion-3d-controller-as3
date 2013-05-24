@@ -11,6 +11,8 @@ package org.hyzhak.leapmotion.controller3D.scene {
     import flash.display.BitmapData;
     import flash.display.Stage3D;
 
+    import org.hyzhak.utils.BitUtils;
+
     public class DemoScene3D extends Object3D {
 		private var _stage3D : Stage3D;
 

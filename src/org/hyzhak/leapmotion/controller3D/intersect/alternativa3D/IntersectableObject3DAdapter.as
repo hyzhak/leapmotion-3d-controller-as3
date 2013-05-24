@@ -88,6 +88,33 @@ package org.hyzhak.leapmotion.controller3D.intersect.alternativa3D {
             }
         }
 
+
+        public function select():void {
+            selected = true;
+        }
+
+        public function unselect():void {
+            selected = false;
+        }
+
+        private var _selected:Boolean;
+
+        private function set selected(value:Boolean):void {
+            if (_selected == value) {
+                return;
+            }
+
+            _selected = value;
+
+            if (_selectionView) {
+                if (value) {
+                    _selectionView.select(_object, _bounds);
+                } else {
+                    _selectionView.unselect(_object, _bounds);
+                }
+            }
+        }
+
         public function shift(dx:Number, dy:Number, dz:Number):void {
             _object.x += dx;
             _object.y += dy;

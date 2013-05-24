@@ -9,6 +9,7 @@ package org.hyzhak.leapmotion.controller3D.intersect {
 
     public class SelectionViewBuilder {
         private static const HOVER_STEP:int = 16;
+        private static const SELECT_STEP:int = 32;
 
         private var hoverObject:Object3D = WireFrame.createEdges(new Box(), 0x00ffff, 1, 3);
         private var selectObject:Object3D = WireFrame.createEdges(new Box(), 0x00ff00, 1, 3);
@@ -44,9 +45,9 @@ package org.hyzhak.leapmotion.controller3D.intersect {
                 }
             }
 
-            selectObject.scaleX = (bounds.maxX - bounds.minX + HOVER_STEP) / 100;
-            selectObject.scaleY = (bounds.maxY - bounds.minY + HOVER_STEP) / 100;
-            selectObject.scaleZ = (bounds.maxZ - bounds.minZ + HOVER_STEP) / 100;
+            selectObject.scaleX = (bounds.maxX - bounds.minX + SELECT_STEP) / 100;
+            selectObject.scaleY = (bounds.maxY - bounds.minY + SELECT_STEP) / 100;
+            selectObject.scaleZ = (bounds.maxZ - bounds.minZ + SELECT_STEP) / 100;
             object.addChild(selectObject);
         }
 
