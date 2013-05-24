@@ -4,6 +4,7 @@ package org.hyzhak.leapmotion.controller3D.fingers {
 
     import com.leapmotion.leap.Controller;
     import com.leapmotion.leap.Finger;
+    import com.leapmotion.leap.Matrix;
     import com.leapmotion.leap.Pointable;
     import com.leapmotion.leap.Vector3;
     import com.leapmotion.leap.events.LeapEvent;
@@ -14,11 +15,12 @@ package org.hyzhak.leapmotion.controller3D.fingers {
     import flash.utils.setTimeout;
 
     import org.hyzhak.leapmotion.controller3D.LeapMotionDemo;
+    import org.hyzhak.leapmotion.controller3D.MatrixUtil;
 
     import org.hyzhak.leapmotion.controller3D.fingers.AbstractFingerView;
 
     public class LeapMotionFingersView extends Object3D {
-        public var scale:Number = 1.0;
+        public var transformation:Matrix = Matrix.identity();
 
         private var _controller:Controller;
 
@@ -37,10 +39,9 @@ package org.hyzhak.leapmotion.controller3D.fingers {
             addEventListener(Event3D.REMOVED, onRemoved);
         }
 
-        public function withStage3D(value:Stage3D):LeapMotionFingersView {
+        public function set withStage3D(value:Stage3D):void {
             _fingersPool.stage3D = value;
             _toolsPool.stage3D = value;
-            return this;
         }
 
         private function onAdded(event:Event3D):void {
@@ -73,10 +74,16 @@ package org.hyzhak.leapmotion.controller3D.fingers {
                     throw new Error("Undefined pointable! Need to implement view for it.");
                 }
                 view.useless = false;
-                var tipPosition:Vector3 = pointable.tipPosition;
-                view.x = scale * tipPosition.x;
-                view.y = -scale * tipPosition.z;
-                view.z = scale * tipPosition.y;
+
+                var tipPosition:Vector3 = MatrixUtil.transformPointWithoutCreation(pointable.tipPosition, transformation);
+                //var tipPosition:Vector3 = transformation.transformPoint(pointable.tipPosition);
+                view.x = tipPosition.x;
+                view.y = tipPosition.y;
+                view.z = tipPosition.z;
+
+                //view.x = scale * tipPosition.x;
+                //view.y = -scale * tipPosition.z;
+                //view.z = scale * tipPosition.y;
 
 //                view.scaleY = pointable.length;
                 view.rotationX = Math.PI / 2 + pointable.direction.pitch;

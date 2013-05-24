@@ -5,6 +5,7 @@ package org.hyzhak.leapmotion.controller3D {
     import com.leapmotion.leap.Finger;
     import com.leapmotion.leap.Frame;
     import com.leapmotion.leap.Gesture;
+    import com.leapmotion.leap.Vector3;
     import com.leapmotion.leap.events.LeapEvent;
 
     import flash.display.Bitmap;
@@ -38,7 +39,6 @@ package org.hyzhak.leapmotion.controller3D {
         private var _gesture3DController:LeapMotionGesture3DController;
         private var _leapmotion:LeapMotionSystem;
         private var _leapMotionIntersectSystem:LeapMotionIntersectSystem;
-        private var _selectionView:SelectionViewBuilder;
 
         private var _dragNDropControllers:Dictionary = new Dictionary();
 
@@ -98,15 +98,19 @@ package org.hyzhak.leapmotion.controller3D {
 
             var object:Object3D = scene.build();
 
-            _selectionView = new SelectionViewBuilder().withStage3D(stage.stage3Ds[0]);
+            var selectionViewBuilder:SelectionViewBuilder = new SelectionViewBuilder().withStage3D(stage.stage3Ds[0]);
 
             _gesture3DController = new LeapMotionGesture3DController(stage, object, _leapmotion.controller);
             _leapMotionIntersectSystem.intersectables.addChild(
-                new IntersectableObject3DAdapter(object, _selectionView)
+                new IntersectableObject3DAdapter(object, selectionViewBuilder)
             );
 
             _scene.add3DObject(scene);
-            _scene.add3DObject(new LeapMotionFingersView(_leapmotion.controller).withStage3D(stage.stage3Ds[0]));
+
+            var fingersView:LeapMotionFingersView = new LeapMotionFingersView(_leapmotion.controller);
+            fingersView.withStage3D = stage.stage3Ds[0];
+            fingersView.transformation.setRotation(new Vector3(1, 0, 0), Math.PI / 2);
+            _scene.add3DObject(fingersView);
             _scene.add3DObject(new BlueCloudSkyBox());
 //            _scene.add3DObject(new SpaceSkyBox());
 //            _scene.add3DObject(new GloomySkyBox());
