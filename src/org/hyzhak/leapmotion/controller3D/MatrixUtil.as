@@ -5,8 +5,10 @@ package org.hyzhak.leapmotion.controller3D {
     public class MatrixUtil {
         /**
          * Transforms a vector with this matrix by transforming its rotation, scale, and translation.
+         *
          * @param vector The Vector to transform.
-         * @return A new Vector representing the transformed original.
+         *
+         * @return same vector.
          *
          */
         public static function transformPointWithoutCreation( vector:Vector3, matrix:Matrix ):Vector3
