@@ -45,14 +45,16 @@ package org.hyzhak.leapmotion.controller3D.intersect {
 
             for(var i:int = 0, count:int = pointables.length; i < count; i++) {
                 var pointable:Pointable = pointables[i];
+                var id:int = pointable.id;
 
                 var intersectable:IIntersectable = intersectables.getChildAt(pointable.tipPosition);
 
                 var intersection:Intersection = null;
 
-                if ( i < _childUnderFinger.length) {
-                    intersection = _childUnderFinger[i];
+                if ( id < _childUnderFinger.length) {
+                    intersection = _childUnderFinger[id];
                 }
+
                 if (intersection && intersection.intersectable == intersectable) {
                     intersection.duration += deltaTime;
                     intersection.unprocessed = false;
@@ -61,7 +63,7 @@ package org.hyzhak.leapmotion.controller3D.intersect {
                     }
                 } else {
                     if (intersection) {
-                        unhover(intersection, i, pointable);
+                        unhover(intersection, id, pointable);
                     }
 
                     if (intersectable) {
@@ -69,10 +71,10 @@ package org.hyzhak.leapmotion.controller3D.intersect {
                         intersection.intersectable = intersectable;
                         intersection.duration = 0;
                         intersection.unprocessed = false;
-                        if (_childUnderFinger.length <= i) {
-                            _childUnderFinger.length = i + 1;
+                        if (_childUnderFinger.length <= id) {
+                            _childUnderFinger.length = id + 1;
                         }
-                        _childUnderFinger[i] = intersection;
+                        _childUnderFinger[id] = intersection;
                     }
                 }
             }
@@ -91,7 +93,7 @@ package org.hyzhak.leapmotion.controller3D.intersect {
             for(var i:int = 0, count:int = _childUnderFinger.length; i < count; i++) {
                 var intersection:Intersection = _childUnderFinger[i];
                 if (intersection && intersection.unprocessed) {
-                    var collection:Object = intersection.intersectable.pointables.collection
+                    var collection:Object = intersection.intersectable.pointables.collection;
                     for each(var pointable in collection) {
                         unhover(intersection, i, pointable);
                     }
@@ -106,19 +108,20 @@ package org.hyzhak.leapmotion.controller3D.intersect {
         }
 
         private function unhover(intersection:Intersection, index:int, pointable:Pointable):void {
-            if (intersection == null) {
+            if (intersection == null || intersection.intersectable == null) {
                 return;
             }
 
             if (intersection.intersectable.unhover(pointable)) {
                 dispatchEvent(new IntersectEvent(IntersectEvent.UNHOVER, intersection.intersectable));
-            }
 
-            if (_childUnderFinger.length <= index) {
-                throw new Error("Wrong index");
+                if (_childUnderFinger.length <= index) {
+                    throw new Error("Wrong index");
+                }
+                _childUnderFinger[index] = null;
+                intersection.intersectable = null;
+                _poolPointableIntersection.returnObject(intersection);
             }
-            _childUnderFinger[index] = null;
-            _poolPointableIntersection.returnObject(intersection);
         }
     }
 }

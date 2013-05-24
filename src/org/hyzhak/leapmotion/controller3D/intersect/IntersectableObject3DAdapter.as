@@ -45,6 +45,8 @@ package org.hyzhak.leapmotion.controller3D.intersect {
             if (_pointables.size() >= 0) {
                 hovered = true;
             }
+
+            trace("hover " + id + " _pointables", _pointables);
             return true;
         }
 
@@ -58,6 +60,7 @@ package org.hyzhak.leapmotion.controller3D.intersect {
             if (_pointables.size() <= 0) {
                 hovered = false;
             }
+            trace("unhover " + id + " _pointables", _pointables);
             return true;
         }
 

@@ -48,11 +48,11 @@ package org.hyzhak.leapmotion.controller3D {
         }
 
         private function onHover(event:IntersectEvent):void {
-            trace("on hover", event.intersectable);
+            //trace("on hover", event.intersectable);
         }
 
         private function onUnHover(event:IntersectEvent):void {
-            trace("on unhover", event.intersectable);
+            //trace("on unhover", event.intersectable);
         }
 
         private function build3DScene():void {
