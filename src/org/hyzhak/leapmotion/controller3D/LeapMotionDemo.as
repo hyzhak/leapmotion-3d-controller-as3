@@ -58,8 +58,8 @@ package org.hyzhak.leapmotion.controller3D {
 
         private function onHover(event:IntersectEvent):void {
             var pointables:Map = event.intersectable.pointables;
-            if (pointables.size() > 2) {
-                startDragByLeapMotion(event.intersectable);
+            if (pointables.size() >= 2) {
+                startDragByLeapMotion(event.intersectable, event.intersectable as IObject3DInterection);
             }
         }
 
@@ -70,13 +70,15 @@ package org.hyzhak.leapmotion.controller3D {
             }
         }
 
-        private function startDragByLeapMotion(intersectable:IIntersectable):void {
+        private function startDragByLeapMotion(intersectable:IIntersectable, interaction:IObject3DInterection):void {
             var dragNDropController:DragNDropController = _dragNDropControllers[intersectable];
             if (dragNDropController == null) {
                 //TODO : optimization - borrow dragNDropController from pool of objects
                 dragNDropController = new DragNDropController();
                 dragNDropController.controller = _leapmotion.controller;
                 dragNDropController.intersectable = intersectable;
+                dragNDropController.interaction = interaction;
+                dragNDropController.transformation = _leapmotion.transformation;
 
                 _dragNDropControllers[intersectable] = dragNDropController;
                 dragNDropController.start();

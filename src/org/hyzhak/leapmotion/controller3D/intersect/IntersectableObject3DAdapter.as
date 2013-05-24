@@ -5,7 +5,9 @@ package org.hyzhak.leapmotion.controller3D.intersect {
 
     import com.leapmotion.leap.Pointable;
 
-    public class IntersectableObject3DAdapter implements IIntersectable{
+    import org.hyzhak.leapmotion.controller3D.IObject3DInterection;
+
+    public class IntersectableObject3DAdapter implements IIntersectable, IObject3DInterection{
         private var _object:Object3D;
         private var _bounds:BoundBox;
         private var _selectionView:SelectionViewBuilder;
@@ -24,6 +26,10 @@ package org.hyzhak.leapmotion.controller3D.intersect {
 
         public function get pointables():Map {
             return _pointables;
+        }
+
+        public function get object3D():Object3D {
+            return _object;
         }
 
         public function isIntersect(x:Number, y:Number, z:Number):Boolean {
@@ -47,7 +53,7 @@ package org.hyzhak.leapmotion.controller3D.intersect {
                 hovered = true;
             }
 
-            trace("hover " + id + " _pointables", _pointables);
+            //trace("hover " + id + " _pointables", _pointables);
             return true;
         }
 
@@ -60,7 +66,7 @@ package org.hyzhak.leapmotion.controller3D.intersect {
             if (_pointables.size() <= 0) {
                 hovered = false;
             }
-            trace("unhover " + id + " _pointables", _pointables);
+            //trace("unhover " + id + " _pointables", _pointables);
             return true;
         }
 
@@ -82,6 +88,12 @@ package org.hyzhak.leapmotion.controller3D.intersect {
             } else {
                 _selectionView.unhover(_object, _bounds);
             }
+        }
+
+        public function shift(dx:Number, dy:Number, dz:Number):void {
+            _object.x += dx;
+            _object.y += dy;
+            _object.z += dz;
         }
     }
 }
