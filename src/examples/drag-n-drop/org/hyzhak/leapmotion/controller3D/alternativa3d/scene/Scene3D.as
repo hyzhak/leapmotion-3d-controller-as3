@@ -13,7 +13,7 @@ package org.hyzhak.leapmotion.controller3D.alternativa3d.scene {
 
     import org.hyzhak.leapmotion.controller3D.alternativa3d.skybox.bluecloud.BlueCloudSkyBox;
 
-    import org.hyzhak.utils.BitUtils;
+    import org.hyzhak.leapmotion.controller3D.BitUtils;
 
     /**
      * Test scene

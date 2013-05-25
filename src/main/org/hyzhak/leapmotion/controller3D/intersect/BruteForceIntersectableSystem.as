@@ -2,8 +2,10 @@ package org.hyzhak.leapmotion.controller3D.intersect {
     import com.leapmotion.leap.Matrix;
     import com.leapmotion.leap.Vector3;
 
-    public class IntersectableSystem {
-        public var transformation:Matrix = Matrix.identity();
+    /**
+     * TODO : We can use more optimal ways to find intersection (KDThree)     *
+     */
+    public class BruteForceIntersectableSystem {
         private var _targets:Vector.<IIntersectable> = new <IIntersectable>[];
 
         public function addChild(value:IIntersectable):void {

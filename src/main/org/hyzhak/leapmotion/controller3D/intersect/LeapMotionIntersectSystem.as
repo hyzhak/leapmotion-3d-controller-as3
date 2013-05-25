@@ -16,22 +16,28 @@ package org.hyzhak.leapmotion.controller3D.intersect {
     public class LeapMotionIntersectSystem extends EventDispatcher {
         public var transformation:Matrix = Matrix.identity();
 
-        //The timestamp in microseconds.
-        public var microsecondToHover:int = 0;
-
-        public var intersectables:IntersectableSystem = new IntersectableSystem();
+        //Collection of Intersectable 3D Objects
+        public var intersectables:BruteForceIntersectableSystem = new BruteForceIntersectableSystem();
 
         private var _poolPointableIntersection:PoolOfObjects = new PoolOfObjects(Intersection);
 
+        //LeapMotion controller
         private var _controller:Controller;
+
+        //Collection of Intersection
         private var _childUnderFinger:Vector.<Intersection> = new <Intersection>[];
-        private var _previousTime:Number;
 
         public function LeapMotionIntersectSystem(controller:Controller) {
             _controller = controller;
             _controller.addEventListener(LeapEvent.LEAPMOTION_FRAME, onFrame);
         }
 
+        /**
+         * If we doesn't process any information thought the frame
+         * we are swipe those Pointable Intersection.
+         *
+         * @param event
+         */
         private function onFrame(event:LeapEvent):void {
             markAsUnprocessed();
             processFrame(event.frame);
@@ -39,13 +45,6 @@ package org.hyzhak.leapmotion.controller3D.intersect {
         }
 
         private function processFrame(frame:Frame):void {
-            var currentTime:Number = frame.timestamp;
-            var deltaTime:Number;
-            if (_previousTime > 0) {
-                deltaTime = currentTime - _previousTime;
-            }
-            _previousTime = currentTime;
-
             var pointables:Vector.<Pointable> = frame.pointables;
 
             for(var i:int = 0, count:int = pointables.length; i < count; i++) {
@@ -63,11 +62,7 @@ package org.hyzhak.leapmotion.controller3D.intersect {
                 }
 
                 if (intersection && intersection.intersectable == intersectable) {
-                    intersection.duration += deltaTime;
                     intersection.unprocessed = false;
-                    if (intersection.duration >= microsecondToHover) {
-                        hover(intersection, pointable);
-                    }
                 } else {
                     if (intersection) {
                         unhover(intersection, id);
@@ -76,12 +71,13 @@ package org.hyzhak.leapmotion.controller3D.intersect {
                     if (intersectable) {
                         intersection = _poolPointableIntersection.borrowObject();
                         intersection.intersectable = intersectable;
-                        intersection.duration = 0;
                         intersection.unprocessed = false;
                         if (_childUnderFinger.length <= id) {
                             _childUnderFinger.length = id + 1;
                         }
                         _childUnderFinger[id] = intersection;
+
+                        hover(intersection, pointable);
                     }
                 }
             }
@@ -132,8 +128,10 @@ package org.hyzhak.leapmotion.controller3D.intersect {
 
 import org.hyzhak.leapmotion.controller3D.intersect.IIntersectable;
 
+/**
+ * Store information about intersection of 3D Object (IIntersectable) with Pointable
+ */
 internal class Intersection {
     public var intersectable:IIntersectable;
-    public var duration:int;
     public var unprocessed:Boolean;
 }

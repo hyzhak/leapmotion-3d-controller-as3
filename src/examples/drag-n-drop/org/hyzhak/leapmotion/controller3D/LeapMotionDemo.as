@@ -8,26 +8,24 @@ package org.hyzhak.leapmotion.controller3D {
     import flash.utils.Dictionary;
 
     import org.hyzhak.leapmotion.controller3D.alternativa3d.Alternativa3DStageBuilder;
-
+    import org.hyzhak.leapmotion.controller3D.alternativa3d.scene.Scene3D;
     import org.hyzhak.leapmotion.controller3D.dragndrop.DragNDropController;
     import org.hyzhak.leapmotion.controller3D.fingers.LeapMotionFingersView;
-    import org.hyzhak.leapmotion.controller3D.gestures.LeapMotionGesture3DController;
     import org.hyzhak.leapmotion.controller3D.intersect.IIntersectable;
     import org.hyzhak.leapmotion.controller3D.intersect.IntersectEvent;
     import org.hyzhak.leapmotion.controller3D.intersect.LeapMotionIntersectSystem;
     import org.hyzhak.leapmotion.controller3D.intersect.Map;
     import org.hyzhak.leapmotion.controller3D.intersect.alternativa3D.IntersectableObject3DAdapter;
     import org.hyzhak.leapmotion.controller3D.intersect.alternativa3D.SelectionViewBuilder;
-    import org.hyzhak.leapmotion.controller3D.alternativa3d.scene.Scene3D;
     import org.hyzhak.utils.PoolOfObjects;
 
     /**
      * Demo of LeapMotion interaction
      */
+    [SWF(frameRate=60)]
     public class LeapMotionDemo extends Sprite {
 
         private var _alternativa3DStage:Alternativa3DStageBuilder;
-        private var _gesture3DController:LeapMotionGesture3DController;
         private var _leapmotion:LeapMotionSystem;
         private var _leapMotionIntersectSystem:LeapMotionIntersectSystem;
 
@@ -123,8 +121,6 @@ package org.hyzhak.leapmotion.controller3D {
 
             var scene:Scene3D = new Scene3D();
             var object:Object3D = scene.build(_alternativa3DStage);
-
-            //_gesture3DController = new LeapMotionGesture3DController(stage, object, _leapmotion.controller);
 
             var selectionViewBuilder:SelectionViewBuilder = new SelectionViewBuilder().withStage3D(stage.stage3Ds[0]);
 

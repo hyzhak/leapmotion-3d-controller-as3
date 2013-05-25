@@ -14,6 +14,9 @@ package org.hyzhak.leapmotion.controller3D.fingers {
 
     import org.hyzhak.utils.MatrixUtil;
 
+    /**
+     * TODO: Remove Alternativa3D dependency
+     */
     public class LeapMotionFingersView extends Object3D {
         public var transformation:Matrix = Matrix.identity();
 
@@ -57,8 +60,8 @@ package org.hyzhak.leapmotion.controller3D.fingers {
         }
 
         private function onFrame(event:LeapEvent):void {
-            markFingersAsUseless(_fingers);
-            markFingersAsUseless(_tools);
+            markPointablesAsUnprocessed(_fingers);
+            markPointablesAsUnprocessed(_tools);
 
             var fingers:Vector.<Pointable> = event.frame.pointables;
             for each(var pointable:Pointable in fingers) {
@@ -70,7 +73,7 @@ package org.hyzhak.leapmotion.controller3D.fingers {
                 } else {
                     throw new Error("Undefined pointable! Need to implement view for it.");
                 }
-                view.useless = false;
+                view.unprocessed = false;
 
                 var vec:Vector3 = MatrixUtil.transformPoint(pointable.tipPosition, transformation);
                 view.x = vec.x;
@@ -84,22 +87,22 @@ package org.hyzhak.leapmotion.controller3D.fingers {
                 MatrixUtil.poolOfVector3.returnObject(vec);
             }
 
-            sweepUnusedFingers(_fingers, _fingersPool);
-            sweepUnusedFingers(_tools, _toolsPool);
+            sweepUnprocessedPointables(_fingers, _fingersPool);
+            sweepUnprocessedPointables(_tools, _toolsPool);
         }
 
-        private function markFingersAsUseless(collection:Vector.<AbstractFingerView>):void {
+        private function markPointablesAsUnprocessed(collection:Vector.<AbstractFingerView>):void {
             for each(var finger:AbstractFingerView in collection) {
                 if (finger) {
-                    finger.useless = true;
+                    finger.unprocessed = true;
                 }
             }
         }
 
-        private function sweepUnusedFingers(collection:Vector.<AbstractFingerView>, pool:PointablesPool):void {
+        private function sweepUnprocessedPointables(collection:Vector.<AbstractFingerView>, pool:PointablesPool):void {
             for(var i:int = 0, count:int = collection.length; i < count; i++) {
                 var finger:AbstractFingerView = collection[i];
-                if (finger && finger.useless) {
+                if (finger && finger.unprocessed) {
                     pool.returnObject(finger);
                     removeChild(finger);
                     collection[i] = null;

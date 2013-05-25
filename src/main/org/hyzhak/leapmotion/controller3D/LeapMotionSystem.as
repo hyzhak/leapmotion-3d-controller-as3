@@ -12,6 +12,8 @@ package org.hyzhak.leapmotion.controller3D {
 
         public function LeapMotionSystem() {
             transformation = Matrix.identity();
+
+            //Alternativa3D rotation transformation
             transformation.setRotation(new Vector3(1, 0, 0), Math.PI / 2);
 
             _controller = new Controller();
@@ -32,9 +34,9 @@ package org.hyzhak.leapmotion.controller3D {
 
         private function onConnect(event:LeapEvent):void {
             trace("onConnect");
-            _controller.enableGesture(Gesture.TYPE_CIRCLE);
-            _controller.enableGesture(Gesture.TYPE_SWIPE );
-            _controller.enableGesture(Gesture.TYPE_SCREEN_TAP);
+//            _controller.enableGesture(Gesture.TYPE_CIRCLE);
+//            _controller.enableGesture(Gesture.TYPE_SWIPE );
+//            _controller.enableGesture(Gesture.TYPE_SCREEN_TAP);
         }
 
         private function onDisconnect(event:LeapEvent):void {

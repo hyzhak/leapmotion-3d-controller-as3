@@ -1,6 +1,9 @@
 package org.hyzhak.leapmotion.controller3D.intersect {
     import com.leapmotion.leap.Pointable;
 
+    /**
+     * Interface with 3D Object
+     */
     public interface IIntersectable {
         function hover(id:int, pointable:Pointable):Boolean;
         function unhover(id:int):Boolean;

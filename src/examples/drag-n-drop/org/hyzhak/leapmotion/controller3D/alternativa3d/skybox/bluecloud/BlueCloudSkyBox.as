@@ -1,5 +1,4 @@
 package org.hyzhak.leapmotion.controller3D.alternativa3d.skybox.bluecloud {
-    import org.hyzhak.leapmotion.controller3D.skybox.bluecloud.*;
     import alternativa.engine3d.materials.TextureMaterial;
     import alternativa.engine3d.objects.SkyBox;
     import alternativa.engine3d.resources.BitmapTextureResource;

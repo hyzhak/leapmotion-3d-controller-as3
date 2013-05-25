@@ -20,7 +20,7 @@ package org.hyzhak.leapmotion.controller3D.dragndrop {
         public var intersectable:IIntersectable;
 
         private var _poolOfPointablePosition:PoolOfObjects = new PoolOfObjects(PointablePosition);
-        private var _startedPosition:Vector.<PointablePosition> = new <PointablePosition>[];
+        private var _previousPosition:Vector.<PointablePosition> = new <PointablePosition>[];
 
         public function start():void {
             controller.addEventListener(LeapEvent.LEAPMOTION_FRAME, onFrame);
@@ -39,7 +39,7 @@ package org.hyzhak.leapmotion.controller3D.dragndrop {
         }
 
         private function markAsUnprocessed():void {
-            for each(var pointablePosition:PointablePosition in _startedPosition) {
+            for each(var pointablePosition:PointablePosition in _previousPosition) {
                 if (pointablePosition) {
                     pointablePosition.unprocessed = true;
                 }
@@ -47,11 +47,11 @@ package org.hyzhak.leapmotion.controller3D.dragndrop {
         }
 
         private function sweepUnprocessed():void {
-            for (var i:int = 0, count:int = _startedPosition.length; i < count; i++) {
-                var pointablePosition:PointablePosition = _startedPosition[i];
+            for (var i:int = 0, count:int = _previousPosition.length; i < count; i++) {
+                var pointablePosition:PointablePosition = _previousPosition[i];
                 if (pointablePosition && pointablePosition.unprocessed) {
                     _poolOfPointablePosition.returnObject(pointablePosition);
-                    _startedPosition[i] = null;
+                    _previousPosition[i] = null;
                 }
             }
         }
@@ -68,15 +68,15 @@ package org.hyzhak.leapmotion.controller3D.dragndrop {
                 var position:Vector3 = MatrixUtil.transformPoint(pointable.tipPosition, transformation);
 
                 //1. get start position
-                if (_startedPosition.length <= id) {
-                    _startedPosition.length = id + 1;
+                if (_previousPosition.length <= id) {
+                    _previousPosition.length = id + 1;
                 }
 
-                var pointablePosition:PointablePosition = _startedPosition[id];
+                var pointablePosition:PointablePosition = _previousPosition[id];
                 if (pointablePosition == null) {
                     pointablePosition = _poolOfPointablePosition.borrowObject();
                     pointablePosition.position = position;
-                    _startedPosition[id] = pointablePosition;
+                    _previousPosition[id] = pointablePosition;
                 } else {
                     //2. calc relevant position
                     dx += position.x - pointablePosition.position.x;
@@ -102,7 +102,7 @@ package org.hyzhak.leapmotion.controller3D.dragndrop {
                 if (isNaN(dx)) {
                     throw new Error();
                 }
-                trace("shift", dx, dy, dz);
+
                 intersectable.shift(dx, dy, dz);
             }
         }

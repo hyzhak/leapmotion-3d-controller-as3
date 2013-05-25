@@ -89,7 +89,7 @@ package org.hyzhak.leapmotion.controller3D.alternativa3d {
             _rootContainer.addChild(_cameraContainer);
             _cameraContainer.x = 0;
             _cameraContainer.y = 0;
-            _cameraContainer.z = 0;
+            _cameraContainer.z = 150;
             _cameraContainer.rotationX = -Math.PI / 6;
             _cameraContainer.rotationY = 0;
             _cameraContainer.rotationZ = Math.PI / 6;

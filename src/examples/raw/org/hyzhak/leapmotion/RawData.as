@@ -11,8 +11,10 @@ package org.hyzhak.leapmotion {
      * Get RAW information from WebSocket on localhost:6437
      */
     public class RawData extends Sprite {
+        public var host:String = "localhost";
+        public var port:int = 6437;
+
         private var _socket:Socket;
-        private var _host:String = "localhost";
 
         /**
          * Base64 encoded cryptographic nonce value.
@@ -22,7 +24,7 @@ package org.hyzhak.leapmotion {
         public function RawData() {
             generateSecWebSocketKey();
 
-            _socket = new Socket(_host, 6437);
+            _socket = new Socket(host, port);
             _socket.addEventListener( Event.CONNECT, onSocketConnectHandler);
             _socket.addEventListener( ProgressEvent.SOCKET_DATA, onSocketDataHandler );
         }
@@ -40,8 +42,7 @@ package org.hyzhak.leapmotion {
             _secWebSocketKey = encoder.flush();
         }
 
-        private function onSocketConnectHandler( event:Event ):void
-        {
+        private function onSocketConnectHandler( event:Event ):void {
             sendHandshake();
         }
 
@@ -49,11 +50,10 @@ package org.hyzhak.leapmotion {
          * Sends the HTTP handshake to the Leap
          *
          */
-        private function sendHandshake():void
-        {
+        private function sendHandshake():void {
             var text:String = "";
             text += "GET / HTTP/1.1\r\n";
-            text += "Host: " + _host + ":6437\r\n";
+            text += "Host: " + host + ":6437\r\n";
             text += "Upgrade: websocket\r\n";
             text += "Connection: Upgrade\r\n";
             text += "Sec-WebSocket-Key: " + _secWebSocketKey + "\r\n";
@@ -64,8 +64,7 @@ package org.hyzhak.leapmotion {
             _socket.writeMultiByte( text, "us-ascii" );
         }
 
-        private function onSocketDataHandler( event:ProgressEvent = null ):void
-        {
+        private function onSocketDataHandler( event:ProgressEvent = null ):void {
             trace("onSocketDataHandler");
             trace(_socket.readUTFBytes(_socket.bytesAvailable));
         }
