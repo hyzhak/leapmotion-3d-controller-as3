@@ -7,6 +7,8 @@ package org.hyzhak.leapmotion.controller3D {
     import flash.events.Event;
     import flash.utils.Dictionary;
 
+    import org.hyzhak.leapmotion.controller3D.alternativa3d.Alternativa3DStageBuilder;
+
     import org.hyzhak.leapmotion.controller3D.dragndrop.DragNDropController;
     import org.hyzhak.leapmotion.controller3D.fingers.LeapMotionFingersView;
     import org.hyzhak.leapmotion.controller3D.gestures.LeapMotionGesture3DController;
@@ -14,15 +16,17 @@ package org.hyzhak.leapmotion.controller3D {
     import org.hyzhak.leapmotion.controller3D.intersect.IntersectEvent;
     import org.hyzhak.leapmotion.controller3D.intersect.LeapMotionIntersectSystem;
     import org.hyzhak.leapmotion.controller3D.intersect.Map;
-    import org.hyzhak.leapmotion.controller3D.intersect.alternativa3D.SelectionViewBuilder;
     import org.hyzhak.leapmotion.controller3D.intersect.alternativa3D.IntersectableObject3DAdapter;
-    import org.hyzhak.leapmotion.controller3D.scene.DemoScene3D;
-    import org.hyzhak.leapmotion.controller3D.skybox.bluecloud.BlueCloudSkyBox;
+    import org.hyzhak.leapmotion.controller3D.intersect.alternativa3D.SelectionViewBuilder;
+    import org.hyzhak.leapmotion.controller3D.scene.Scene3D;
     import org.hyzhak.utils.PoolOfObjects;
 
+    /**
+     * Demo of LeapMotion interaction
+     */
     public class LeapMotionDemo extends Sprite {
 
-        private var _scene:Scene3D;
+        private var _alternativa3DStage:Alternativa3DStageBuilder;
         private var _gesture3DController:LeapMotionGesture3DController;
         private var _leapmotion:LeapMotionSystem;
         private var _leapMotionIntersectSystem:LeapMotionIntersectSystem;
@@ -40,6 +44,9 @@ package org.hyzhak.leapmotion.controller3D {
             build3DScene();
         }
 
+        /**
+         * Build system for tracking hover of pointable on 3D object
+         */
         private function buildIntersectSystem():void {
             _leapMotionIntersectSystem = new LeapMotionIntersectSystem(_leapmotion.controller);
             _leapMotionIntersectSystem.transformation = _leapmotion.transformation;
@@ -47,6 +54,12 @@ package org.hyzhak.leapmotion.controller3D {
             _leapMotionIntersectSystem.addEventListener(IntersectEvent.UNHOVER, onUnHover);
         }
 
+        /**
+         * Handle hover event.
+         * If we have more then one pointables hovered on 3D object we start dragging this object
+         *
+         * @param event
+         */
         private function onHover(event:IntersectEvent):void {
             var pointables:Map = event.intersectable.pointables;
             if (pointables.size() >= 2) {
@@ -54,6 +67,12 @@ package org.hyzhak.leapmotion.controller3D {
             }
         }
 
+        /**
+         * Handle unhover event.
+         * If we have less then 2 fingers then we stop dragging
+         *
+         * @param event
+         */
         private function onUnHover(event:IntersectEvent):void {
             var pointables:Map = event.intersectable.pointables;
             if (pointables.size() < 2) {
@@ -61,10 +80,14 @@ package org.hyzhak.leapmotion.controller3D {
             }
         }
 
+        /**
+         * Add controller for dragging 3D object
+         *
+         * @param intersectable
+         */
         private function startDragByLeapMotion(intersectable:IIntersectable):void {
             var dragNDropController:DragNDropController = _dragNDropControllers[intersectable];
             if (dragNDropController == null) {
-                //TODO : optimization - borrow dragNDropController from pool of objects
                 dragNDropController = _poolOfDragNDropController.borrowObject();
                 dragNDropController.controller = _leapmotion.controller;
                 dragNDropController.intersectable = intersectable;
@@ -75,55 +98,64 @@ package org.hyzhak.leapmotion.controller3D {
             }
         }
 
+        /**
+         * Remove dragging controller
+         *
+         * @param intersectable
+         */
         private function stopDragByLeapMotion(intersectable:IIntersectable):void {
             var dragNDropController:DragNDropController = _dragNDropControllers[intersectable];
             if (dragNDropController) {
                 dragNDropController.stop();
                 delete _dragNDropControllers[intersectable];
                 _poolOfDragNDropController.returnObject(dragNDropController);
-                //TODO: optimization - return dragNDropController to pool of objects
             }
         }
 
+        /**
+         * build simple 3D Scene
+         */
         private function build3DScene():void {
-            _scene = new Scene3D();
-            _scene.initInstance();
-            addChild(_scene);
+            _alternativa3DStage = new Alternativa3DStageBuilder();
+            _alternativa3DStage.build();
 
-            var scene:DemoScene3D = new DemoScene3D();
+            addChild(_alternativa3DStage);
 
-            var object:Object3D = scene.build();
-
-            var selectionViewBuilder:SelectionViewBuilder = new SelectionViewBuilder().withStage3D(stage.stage3Ds[0]);
+            var scene:Scene3D = new Scene3D();
+            var object:Object3D = scene.build(_alternativa3DStage);
 
             //_gesture3DController = new LeapMotionGesture3DController(stage, object, _leapmotion.controller);
+
+            var selectionViewBuilder:SelectionViewBuilder = new SelectionViewBuilder().withStage3D(stage.stage3Ds[0]);
 
             _leapMotionIntersectSystem.intersectables.addChild(
                 new IntersectableObject3DAdapter(object, selectionViewBuilder)
             );
 
-            _scene.rootContainer.addChild(scene);
-
-            var fingersView:LeapMotionFingersView = new LeapMotionFingersView(_leapmotion.controller);
+            var fingersView:LeapMotionFingersView = new LeapMotionFingersView();
+            fingersView.controller = _leapmotion.controller;
             fingersView.withStage3D = stage.stage3Ds[0];
             fingersView.transformation = _leapmotion.transformation;
-
-            _scene.rootContainer.addChild(fingersView);
-            _scene.rootContainer.addChild(new BlueCloudSkyBox());
-//            _scene.add3DObject(new SpaceSkyBox());
-//            _scene.add3DObject(new GloomySkyBox());
+            fingersView.build(_alternativa3DStage);
 
             validateSceneSize();
-
             stage.addEventListener(Event.RESIZE, onStageResize);
         }
 
+        /**
+         * update scene on stage resize
+         *
+         * @param event
+         */
         private function onStageResize(event:Event):void {
             validateSceneSize();
         }
 
+        /**
+         * fit scene to the stage size
+         */
         private function validateSceneSize():void {
-            _scene.resize(stage.stageWidth, stage.stageHeight);
+            _alternativa3DStage.resize(stage.stageWidth, stage.stageHeight);
         }
     }
 }

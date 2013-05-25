@@ -1,21 +1,22 @@
-package org.hyzhak.leapmotion.controller3D {
+package org.hyzhak.leapmotion.controller3D.alternativa3d {
     import alternativa.engine3d.alternativa3d;
     import alternativa.engine3d.core.Camera3D;
     import alternativa.engine3d.core.Object3D;
-    import alternativa.engine3d.primitives.Plane;
 
     import flash.display.InteractiveObject;
-
-    import flash.display.Sprite;
-
     import flash.display.Stage;
-    import flash.events.Event;
     import flash.events.MouseEvent;
-    import flash.geom.Vector3D;
 
     use namespace alternativa3d;
 
-	public class MouseCameraController extends Object3D {
+    /**
+     * Simple Mouse Controller for Camera to rotate around center for Controller
+     * Controller add camera to it self and rotate self by the mouse
+     *
+     * based on orbit camera http://gonchar.me/blog/goncharposts/1492
+     *
+     */
+	public class MouseOrbitCameraController extends Object3D {
 
 		// config
 		// private var _stepRotateKey:Number = 0.3;
@@ -36,7 +37,7 @@ package org.hyzhak.leapmotion.controller3D {
 
 		private var isLeftCamera : int = 1;
 
-		public function MouseCameraController(object : Object3D, eventSource:InteractiveObject, stage : Stage) {
+		public function MouseOrbitCameraController(object : Object3D, eventSource:InteractiveObject, stage : Stage) {
 			_object = object;
 			_stage = stage;
             _eventSource = eventSource;

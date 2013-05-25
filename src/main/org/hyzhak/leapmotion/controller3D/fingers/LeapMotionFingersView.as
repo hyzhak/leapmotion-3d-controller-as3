@@ -10,6 +10,8 @@ package org.hyzhak.leapmotion.controller3D.fingers {
 
     import flash.display.Stage3D;
 
+    import org.hyzhak.leapmotion.controller3D.alternativa3d.Alternativa3DStageBuilder;
+
     import org.hyzhak.utils.MatrixUtil;
 
     public class LeapMotionFingersView extends Object3D {
@@ -23,18 +25,20 @@ package org.hyzhak.leapmotion.controller3D.fingers {
         private var _fingers:Vector.<AbstractFingerView> = new <AbstractFingerView>[];
         private var _tools:Vector.<AbstractFingerView> = new <AbstractFingerView>[];
 
-        public function LeapMotionFingersView(controller:Controller) {
-            super();
-
-            _controller = controller;
-
-            addEventListener(Event3D.ADDED, onAdded);
-            addEventListener(Event3D.REMOVED, onRemoved);
-        }
-
         public function set withStage3D(value:Stage3D):void {
             _fingersPool.stage3D = value;
             _toolsPool.stage3D = value;
+        }
+
+        public function set controller(value:Controller):void {
+            _controller = value;
+        }
+
+        public function build(scene:Alternativa3DStageBuilder):void {
+            addEventListener(Event3D.ADDED, onAdded);
+            addEventListener(Event3D.REMOVED, onRemoved);
+
+            scene.rootContainer.addChild(this);
         }
 
         private function onAdded(event:Event3D):void {

@@ -1,5 +1,4 @@
 package org.hyzhak.leapmotion.controller3D.scene {
-    import org.hyzhak.leapmotion.controller3D.*;
     import alternativa.engine3d.core.Object3D;
     import alternativa.engine3d.materials.StandardMaterial;
     import alternativa.engine3d.primitives.Box;
@@ -7,16 +6,21 @@ package org.hyzhak.leapmotion.controller3D.scene {
     import alternativa.engine3d.resources.TextureResource;
 
     import flash.display.Bitmap;
-
     import flash.display.BitmapData;
     import flash.display.Stage3D;
 
+    import org.hyzhak.leapmotion.controller3D.alternativa3d.Alternativa3DStageBuilder;
+
+    import org.hyzhak.leapmotion.controller3D.skybox.bluecloud.BlueCloudSkyBox;
+
     import org.hyzhak.utils.BitUtils;
 
-    public class DemoScene3D extends Object3D {
+    /**
+     * Test scene
+     *
+     */
+    public class Scene3D extends Object3D {
 		private var _stage3D : Stage3D;
-
-		private var _specularPower : Number = 1.0;
 
 		private var _material : StandardMaterial;
 
@@ -37,25 +41,28 @@ package org.hyzhak.leapmotion.controller3D.scene {
         public var normalMap:BitmapData = (new NORMAL_MAP() as Bitmap).bitmapData;
         public var specularMap:BitmapData = (new SPECULAR_MAP() as Bitmap).bitmapData;
 
-		public function forStage3D(value : Stage3D) : DemoScene3D {
+		public function forStage3D(value : Stage3D) : Scene3D {
 			_stage3D = value;
 			return this;
 		}
 
-		public function build() : Object3D {
+		public function build(stage:Alternativa3DStageBuilder) : Object3D {
 			buildDefaultWhiteTexture();
 			buildDefaultNormalMap();
 
 			_material = new StandardMaterial();
 
-			var box : Box = new Box();
+			var box : Box = new Box(50, 50, 50);
 			box.setMaterialToAllSurfaces(_material);
             box.z = 150;
-			addChild(box);
+
+            stage.rootContainer.addChild(box);
 
             updateDiffuse();
             updateNormal();
             updateSpecular();
+
+            stage.rootContainer.addChild(new BlueCloudSkyBox());
 
             return box;
 		}
@@ -70,14 +77,18 @@ package org.hyzhak.leapmotion.controller3D.scene {
 			var bitmap : BitmapData = new BitmapData(1, 1);
 			bitmap.setPixel(0, 0, 0xFFFFFF);
 			_defaultWhiteTexture = new BitmapTextureResource(bitmap, true);
-//			_defaultWhiteTexture.upload(_stage3D.context3D);
+            if (_stage3D && _stage3D.context3D) {
+			    _defaultWhiteTexture.upload(_stage3D.context3D);
+            }
 		}
 
 		private function buildDefaultNormalMap() : void {
 			var bitmap : BitmapData = new BitmapData(1, 1);
 			bitmap.setPixel(0, 0, 0x7F7FFF);
 			_defaultNormalMap = new BitmapTextureResource(bitmap, true);
-//			_defaultNormalMap.upload(_stage3D.context3D);
+            if (_stage3D && _stage3D.context3D) {
+			    _defaultNormalMap.upload(_stage3D.context3D);
+            }
 		}
 
 		private function updateDiffuse() : void {
@@ -115,21 +126,5 @@ package org.hyzhak.leapmotion.controller3D.scene {
                 }
             }
         }
-
-		public function get specularPower() : Number {
-			return _specularPower;
-		}
-
-		public function set specularPower(value : Number) : void {
-			if (_specularPower == value) {
-				return;
-			}
-
-			_specularPower = value;
-
-			if (_material != null) {
-				_material.specularPower = value;
-			}
-		}
 	}
 }

@@ -1,4 +1,5 @@
-package org.hyzhak.leapmotion.controller3D {
+package org.hyzhak.leapmotion.controller3D.alternativa3d {
+    import org.hyzhak.leapmotion.controller3D.*;
     import alternativa.engine3d.core.Camera3D;
     import alternativa.engine3d.core.Object3D;
     import alternativa.engine3d.core.Resource;
@@ -11,7 +12,7 @@ package org.hyzhak.leapmotion.controller3D {
     import flash.display3D.Context3D;
     import flash.events.Event;
 
-    public class Scene3D extends Sprite {
+    public class Alternativa3DStageBuilder extends Sprite {
         private var _rootContainer : Object3D;
 
         private var _camera:Camera3D;
@@ -20,9 +21,9 @@ package org.hyzhak.leapmotion.controller3D {
         private var _viewWidth : Number = 640;
         private var _viewHeight : Number = 480;
 
-        private var _cameraContainer : MouseCameraController;
+        private var _cameraContainer : MouseOrbitCameraController;
 
-        public function initInstance() : void {
+        public function build() : void {
             _rootContainer = new Object3D();
 
             if (stage) {
@@ -84,7 +85,7 @@ package org.hyzhak.leapmotion.controller3D {
         }
 
         private function buildCameraController() : void {
-            _cameraContainer = new MouseCameraController(_camera, _camera.view, stage);
+            _cameraContainer = new MouseOrbitCameraController(_camera, _camera.view, stage);
             _rootContainer.addChild(_cameraContainer);
             _cameraContainer.x = 0;
             _cameraContainer.y = 0;
