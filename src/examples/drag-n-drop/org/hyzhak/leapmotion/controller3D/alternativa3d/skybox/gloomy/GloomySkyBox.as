@@ -1,4 +1,5 @@
-package org.hyzhak.leapmotion.controller3D.skybox.gloomy {
+package org.hyzhak.leapmotion.controller3D.alternativa3d.skybox.gloomy {
+    import org.hyzhak.leapmotion.controller3D.skybox.gloomy.*;
     import alternativa.engine3d.materials.TextureMaterial;
     import alternativa.engine3d.objects.SkyBox;
     import alternativa.engine3d.resources.BitmapTextureResource;

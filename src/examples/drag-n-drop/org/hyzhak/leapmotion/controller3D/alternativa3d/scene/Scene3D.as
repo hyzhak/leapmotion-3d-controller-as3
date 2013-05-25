@@ -1,4 +1,4 @@
-package org.hyzhak.leapmotion.controller3D.scene {
+package org.hyzhak.leapmotion.controller3D.alternativa3d.scene {
     import alternativa.engine3d.core.Object3D;
     import alternativa.engine3d.materials.StandardMaterial;
     import alternativa.engine3d.primitives.Box;
@@ -11,7 +11,7 @@ package org.hyzhak.leapmotion.controller3D.scene {
 
     import org.hyzhak.leapmotion.controller3D.alternativa3d.Alternativa3DStageBuilder;
 
-    import org.hyzhak.leapmotion.controller3D.skybox.bluecloud.BlueCloudSkyBox;
+    import org.hyzhak.leapmotion.controller3D.alternativa3d.skybox.bluecloud.BlueCloudSkyBox;
 
     import org.hyzhak.utils.BitUtils;
 

@@ -18,7 +18,7 @@ package org.hyzhak.leapmotion.controller3D {
     import org.hyzhak.leapmotion.controller3D.intersect.Map;
     import org.hyzhak.leapmotion.controller3D.intersect.alternativa3D.IntersectableObject3DAdapter;
     import org.hyzhak.leapmotion.controller3D.intersect.alternativa3D.SelectionViewBuilder;
-    import org.hyzhak.leapmotion.controller3D.scene.Scene3D;
+    import org.hyzhak.leapmotion.controller3D.alternativa3d.scene.Scene3D;
     import org.hyzhak.utils.PoolOfObjects;
 
     /**
