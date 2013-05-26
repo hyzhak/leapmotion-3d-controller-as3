@@ -46,6 +46,7 @@
             params.bgcolor = "${bgcolor}";
             params.allowscriptaccess = "always";
             params.allowfullscreen = "true";
+            params.wmode = "direct";
             var attributes = {};
             attributes.id = "${application}";
             attributes.name = "${application}";
@@ -128,6 +129,16 @@
           function trackEventToGA(category, action, label, value) {
             console.log('send', 'event', category, action, label, value);
             ga('send', 'event', category, action, label, value);
+          }
+        </script>
+        <script>
+          var flash = document.getElementById('${application}');
+          var ws = new WebSocket("ws://localhost:6437/");
+          ws.onmessage = function(event) {
+            if (!flash) {
+              flash = document.getElementById('RawData');
+            }
+            flash.onLeapMotionFrame(event.data);
           }
         </script>
    </body>

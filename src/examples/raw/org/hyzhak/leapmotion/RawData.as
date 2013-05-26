@@ -8,6 +8,7 @@ package org.hyzhak.leapmotion {
     import flash.events.SecurityErrorEvent;
     import flash.external.ExternalInterface;
     import flash.net.Socket;
+    import flash.system.Security;
     import flash.text.TextField;
     import flash.utils.ByteArray;
 
@@ -18,7 +19,7 @@ package org.hyzhak.leapmotion {
         /**
          * LeapMotion Socket url
          */
-        public var host:String = "localhost";
+        public var host:String = "127.0.0.1";
         public var port:int = 6437;
 
         /**
@@ -37,6 +38,8 @@ package org.hyzhak.leapmotion {
         private var _secWebSocketKey:String;
 
         public function RawData() {
+            Security.allowDomain(host);
+
             logToGA("start flash");
 
             _tf = new TextField();
@@ -46,11 +49,20 @@ package org.hyzhak.leapmotion {
             _tf.wordWrap = true;
             addChild(_tf);
 
-            _socket = new Socket(host, port);
-            _socket.addEventListener( Event.CONNECT, onSocketConnectHandler);
-            _socket.addEventListener( IOErrorEvent.IO_ERROR, onIOError);
-            _socket.addEventListener( SecurityErrorEvent.SECURITY_ERROR, onSecurityErrorHandler );
-            _socket.addEventListener( ProgressEvent.SOCKET_DATA, onSocketDataHandler );
+//            Get LeapMotion data thought Flash Socket
+//            _socket = new Socket(host, port);
+//            _socket.addEventListener( Event.CONNECT, onSocketConnectHandler);
+//            _socket.addEventListener( IOErrorEvent.IO_ERROR, onIOError);
+//            _socket.addEventListener( SecurityErrorEvent.SECURITY_ERROR, onSecurityErrorHandler );
+//            _socket.addEventListener( ProgressEvent.SOCKET_DATA, onSocketDataHandler );
+
+//            Get LeapMotion data thought JS WebSocket
+            ExternalInterface.addCallback("onLeapMotionFrame", onLeapMotionFrame);
+        }
+
+        private function onLeapMotionFrame(value:*):void {
+            clearLog();
+            log("onLeapMotionFrame", value);
         }
 
         private function onIOError(event:IOErrorEvent):void {
