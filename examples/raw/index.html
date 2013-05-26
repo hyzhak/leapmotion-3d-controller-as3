@@ -46,6 +46,7 @@
             params.bgcolor = "#ffffff";
             params.allowscriptaccess = "always";
             params.allowfullscreen = "true";
+            params.wmode = "direct";
             var attributes = {};
             attributes.id = "RawData";
             attributes.name = "RawData";
@@ -115,9 +116,29 @@
             var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
           })();
 
+          /**
+           * Log information about LeapMotion support to Google Analytics
+           *
+           * https://developers.google.com/analytics/devguides/collection/analyticsjs/events
+           *
+           * @param category
+           * @param action
+           * @param label
+           * @param value
+           */
           function trackEventToGA(category, action, label, value) {
             console.log('send', 'event', category, action, label, value);
             ga('send', 'event', category, action, label, value);
+          }
+        </script>
+        <script>
+          var flash = document.getElementById('RawData');
+          var ws = new WebSocket("ws://localhost:6437/");
+          ws.onmessage = function(event) {
+            if (!flash) {
+              flash = document.getElementById('RawData');
+            }
+            flash.onLeapMotionFrame(event.data);
           }
         </script>
    </body>
