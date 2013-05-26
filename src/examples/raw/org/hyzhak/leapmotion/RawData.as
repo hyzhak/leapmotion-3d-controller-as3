@@ -49,22 +49,62 @@ package org.hyzhak.leapmotion {
             _tf.wordWrap = true;
             addChild(_tf);
 
-//            Get LeapMotion data thought Flash Socket
-//            _socket = new Socket(host, port);
-//            _socket.addEventListener( Event.CONNECT, onSocketConnectHandler);
-//            _socket.addEventListener( IOErrorEvent.IO_ERROR, onIOError);
-//            _socket.addEventListener( SecurityErrorEvent.SECURITY_ERROR, onSecurityErrorHandler );
-//            _socket.addEventListener( ProgressEvent.SOCKET_DATA, onSocketDataHandler );
-
-//            Get LeapMotion data thought JS WebSocket
-            ExternalInterface.addCallback("onLeapMotionFrame", onLeapMotionFrame);
+            if(this.loaderInfo.parameters["useJSWebSocket"]) {
+                /**
+                 * Get LeapMotion data thought JS WebSocket
+                 */
+                logToGA("use js web socket");
+                ExternalInterface.addCallback("onJSLeapMotionOpen", onJSLeapMotionOpen);
+                ExternalInterface.addCallback("onJSLeapMotionFrame", onJSLeapMotionFrame);
+                ExternalInterface.addCallback("onJSLeapMotionClose", onJSLeapMotionClose);
+                ExternalInterface.addCallback("onJSLeapMotionError", onJSLeapMotionError);
+            } else {
+                /**
+                 * Get LeapMotion data thought Flash Socket
+                 */
+                logToGA("use flash socket");
+                _socket = new Socket(host, port);
+                _socket.addEventListener( Event.CONNECT, onSocketConnectHandler);
+                _socket.addEventListener( IOErrorEvent.IO_ERROR, onIOError);
+                _socket.addEventListener( SecurityErrorEvent.SECURITY_ERROR, onSecurityErrorHandler );
+                _socket.addEventListener( ProgressEvent.SOCKET_DATA, onSocketDataHandler );
+            }
         }
 
-        private function onLeapMotionFrame(value:*):void {
+        /**
+         * LeapMotion tracking thought ExternalInterface
+         *
+         * @param value
+         */
+
+        private function onJSLeapMotionError(value:*):void {
             clearLog();
-            log("onLeapMotionFrame", value);
+            logToGA("onJSLeapMotionError", value);
+            log("onJSLeapMotionError", value);
         }
 
+        private function onJSLeapMotionOpen(value:*):void {
+            clearLog();
+            logToGA("onJSLeapMotionOpen", value);
+            log("onJSLeapMotionOpen", value);
+        }
+
+        private function onJSLeapMotionClose(value:*):void {
+            clearLog();
+            logToGA("onJSLeapMotionClose", value);
+            log("onJSLeapMotionClose", value);
+        }
+
+        private function onJSLeapMotionFrame(value:*):void {
+            clearLog();
+            log("onJSLeapMotionFrame", value);
+        }
+
+        /**
+         * Tracking LeapMotion thought Socket (flash)
+         *
+         * @param event
+         */
         private function onIOError(event:IOErrorEvent):void {
             log("onIOError", event.text);
             logToGA("onIOError", event.text);
