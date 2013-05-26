@@ -1,20 +1,34 @@
 package org.hyzhak.leapmotion {
-    import com.leapmotion.leap.util.Base64Encoder;
+    import com.hurlant.util.Base64;
 
     import flash.display.Sprite;
     import flash.events.Event;
+    import flash.events.IOErrorEvent;
     import flash.events.ProgressEvent;
+    import flash.events.SecurityErrorEvent;
     import flash.net.Socket;
+    import flash.text.TextField;
     import flash.utils.ByteArray;
 
     /**
-     * Get RAW information from WebSocket on localhost:6437
+     * Get RAW data from WebSocket on localhost:6437
      */
     public class RawData extends Sprite {
+        /**
+         * LeapMotion Socket url
+         */
         public var host:String = "localhost";
         public var port:int = 6437;
 
+        /**
+         * Socket for connect with LeapMotion
+         */
         private var _socket:Socket;
+
+        /**
+         * text field for logging LeapMotion state
+         */
+        private var _tf:TextField;
 
         /**
          * Base64 encoded cryptographic nonce value.
@@ -22,13 +36,36 @@ package org.hyzhak.leapmotion {
         private var _secWebSocketKey:String;
 
         public function RawData() {
-            generateSecWebSocketKey();
+            _tf = new TextField();
+            _tf.width = stage.stageWidth;
+            _tf.height = stage.stageHeight;
+            _tf.multiline = true;
+            addChild(_tf);
 
             _socket = new Socket(host, port);
             _socket.addEventListener( Event.CONNECT, onSocketConnectHandler);
+            _socket.addEventListener( IOErrorEvent.IO_ERROR, onIOError);
+            _socket.addEventListener( SecurityErrorEvent.SECURITY_ERROR, onSecurityErrorHandler );
             _socket.addEventListener( ProgressEvent.SOCKET_DATA, onSocketDataHandler );
         }
 
+        private function onIOError(event:IOErrorEvent):void {
+            log("onIOError", event.text);
+        }
+
+        private function onSecurityErrorHandler(event:SecurityErrorEvent):void {
+            log("onSecurityErrorHandler", event.text);
+        }
+
+        private function onSocketConnectHandler( event:Event ):void {
+            log("onSocketConnectHandler");
+            generateSecWebSocketKey();
+            sendHandshake();
+        }
+
+        /**
+         * Generate key for emulate handshake with LeapMotion WebSocket
+         */
         private function generateSecWebSocketKey():void {
             // Generate nonce
             var nonce:ByteArray = new ByteArray();
@@ -37,13 +74,7 @@ package org.hyzhak.leapmotion {
 
             nonce.position = 0;
 
-            var encoder:Base64Encoder = new Base64Encoder();
-            encoder.encodeBytes( nonce );
-            _secWebSocketKey = encoder.flush();
-        }
-
-        private function onSocketConnectHandler( event:Event ):void {
-            sendHandshake();
+            _secWebSocketKey = Base64.encodeByteArray(nonce);
         }
 
         /**
@@ -64,9 +95,24 @@ package org.hyzhak.leapmotion {
             _socket.writeMultiByte( text, "us-ascii" );
         }
 
+        /**
+         * Log upcoming date from LeapMotion
+         *
+         * @param event
+         */
         private function onSocketDataHandler( event:ProgressEvent = null ):void {
-            trace("onSocketDataHandler");
-            trace(_socket.readUTFBytes(_socket.bytesAvailable));
+            clearLog();
+            log("onSocketDataHandler");
+            log(_socket.readUTFBytes(_socket.bytesAvailable));
+        }
+
+        private function clearLog():void {
+            _tf.text = "";
+        }
+
+        private function log(...args):void {
+            trace.apply(null, args);
+            _tf.appendText(args.join(" "));
         }
     }
 }
