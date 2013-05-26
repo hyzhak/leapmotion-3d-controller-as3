@@ -40,6 +40,7 @@ package org.hyzhak.leapmotion {
             _tf.width = stage.stageWidth;
             _tf.height = stage.stageHeight;
             _tf.multiline = true;
+            _tf.wordWrap = true;
             addChild(_tf);
 
             _socket = new Socket(host, port);
