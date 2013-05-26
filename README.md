@@ -1,5 +1,5 @@
-leapmotion-3d-controller-as3
-============================
+LeapMotion 3D Controller (AS3)
+==============================
 
 Using leapmotion for control 3d objects
 
