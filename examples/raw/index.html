@@ -40,8 +40,11 @@
             var swfVersionStr = "11.4.0";
             // To use express install, set to playerProductInstall.swf, otherwise the empty string. 
             var xiSwfUrlStr = "playerProductInstall.swf";
+
+            var useJSWebSocket = true;
+
             var flashvars = {
-              useJSWebSocket:true
+              useJSWebSocket: useJSWebSocket
             };
             var params = {};
             params.quality = "high";
@@ -134,31 +137,34 @@
             ga('send', 'event', category, action, label, value);
           }
         </script>
+
         <script>
-          var ws = new WebSocket("ws://localhost:6437/");
-          ws.onerror = function(event) {
-            getSWF().onJSLeapMotionError(event.data);
-          };
+          if (useJSWebSocket) {
+            var ws = new WebSocket("ws://localhost:6437/");
+            ws.onerror = function(event) {
+              getSWF().onJSLeapMotionError(event.data);
+            };
 
-          ws.onopen = function(event) {
-            getSWF().onJSLeapMotionOpen(event.data);
-          };
+            ws.onopen = function(event) {
+              getSWF().onJSLeapMotionOpen(event.data);
+            };
 
-          ws.onclose = function(event) {
-            getSWF().onJSLeapMotionClose(event.data);
-          };
+            ws.onclose = function(event) {
+              getSWF().onJSLeapMotionClose(event.data);
+            };
 
-          ws.onmessage = function(event) {
-            getSWF().onJSLeapMotionFrame(event.data);
-          };
+            ws.onmessage = function(event) {
+              getSWF().onJSLeapMotionFrame(event.data);
+            };
 
-          function getSWF() {
             var flash;
-            if (!flash) {
-              flash = document.getElementById('RawData');
-            }
+            function getSWF() {
+              if (!flash) {
+                flash = document.getElementById('RawData');
+              }
 
-            return flash;
+              return flash;
+            }
           }
         </script>
    </body>
